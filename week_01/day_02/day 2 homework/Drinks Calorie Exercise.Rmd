@@ -9,6 +9,10 @@ library(CodeClanData)
 ```
 ```{r}
 drinks_content
+view(drinks_content)
+nrow(drinks_content)
+ncol(drinks_content)
+dim(drinks_content)
 ```
 #Question 2
 ```{r}
