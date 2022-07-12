@@ -1,0 +1,40 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+#Question 1
+```{r}
+library(tidyverse)
+library(CodeClanData)
+```
+```{r}
+drinks_content
+```
+#Question 2
+```{r}
+full_drinks_content <- na.omit(drinks_content)
+select(full_drinks_content, Beverage_category, Beverage, Beverage_prep, Calories)
+```
+#Question 3
+```{r}
+mutate(full_drinks_content, calorie_diff = Calories - 135) 
+```
+#Question 4 
+```{r}
+drinks_grouped <- group_by(full_drinks_content, Beverage_category)
+summarise(drinks_grouped, mean(Calories))
+```
+
+#Question 5
+```{r}
+drinks_grouped <- group_by(full_drinks_content, Beverage_prep)
+summarise(drinks_grouped, mean(Calories))
+```
+#Question 6
+```{r}
+summarise(full_drinks_content, mean(Calories))
+```
+```{r}
+filter(drinks_grouped, Calories > 194.30129)
+```
+
