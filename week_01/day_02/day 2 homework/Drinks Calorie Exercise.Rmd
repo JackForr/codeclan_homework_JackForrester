@@ -16,29 +16,73 @@ dim(drinks_content)
 ```
 #Question 2
 ```{r}
-full_drinks_content <- na.omit(drinks_content)
-select(full_drinks_content, Beverage_category, Beverage, Beverage_prep, Calories)
+drinks_content %>% 
+select(Beverage_category, Beverage, Beverage_prep, Calories) %>% 
+  filter(is.na(Calories)) %>% 
+  summarise(count_of_missing_calories = n())
 ```
 #Question 3
 ```{r}
-mutate(full_drinks_content, calorie_diff = Calories - 135) 
+drinks_calories <- drinks_content %>% 
+mutate(calorie_diff = Calories - 135) 
 ```
 #Question 4 
 ```{r}
-drinks_grouped <- group_by(full_drinks_content, Beverage_category)
-summarise(drinks_grouped, mean(Calories))
+most_calories <- drinks_calories %>% 
+group_by(Beverage_category) %>% 
+  summarise(mean_calories = mean(Calories)) %>% 
+  arrange(desc(mean_calories)) %>% 
+  head(3)
 ```
-
+```{r}
+most_calories
+```
 #Question 5
 ```{r}
-drinks_grouped <- group_by(full_drinks_content, Beverage_prep)
-summarise(drinks_grouped, mean(Calories))
-```
-#Question 6
-```{r}
-summarise(full_drinks_content, mean(Calories))
+average_bev_prep <- drinks_calories %>% 
+  group_by(Beverage_prep) %>% 
+  summarise(mean_cals = mean(Calories)) %>% 
+  arrange(desc(mean_cals))
 ```
 ```{r}
-filter(drinks_grouped, Calories > 194.30129)
+average_bev_prep
 ```
 
+#Question 6
+```{r}
+avg_calories <- drink_calories %>%
+                  summarise(mean_calories = mean(Calories)) %>%
+                  pull()
+
+avg_calories 
+```
+```{r}
+above_avg_calories <- average_bev_prep %>%
+  filter(mean_cals >= avg_calories)
+
+above_avg_calories
+```
+```{r}
+average_bev_prep %>%
+  mutate(is_greater_than_avg = mean_cals >= avg_calories) %>%
+  filter(is_greater_than_avg == TRUE)
+```
+
+#Question 7
+
+# can start by finding the drink with the lowest number of calories 
+drink_calories %>%
+  group_by(Beverage_category, Beverage, Beverage_prep) %>%
+  summarise(min_calories = min(Calories)) %>%
+  arrange(min_calories) %>%
+  head(1)
+
+# But this is a Tea and the answer specifically asked for coffee drink! So we will filter out this tea drink to get the lowest calorie coffee drink.
+
+
+drink_calories %>%
+  filter(Beverage_category != "Tazo® Tea Drinks") %>%
+  group_by(Beverage_category, Beverage, Beverage_prep) %>%
+  summarise(min_calories = min(Calories)) %>%
+  arrange(min_calories) %>%
+  head(1)
