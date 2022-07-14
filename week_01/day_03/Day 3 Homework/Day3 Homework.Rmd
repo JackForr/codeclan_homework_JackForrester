@@ -11,23 +11,21 @@ movie_data <- read_csv("movies.csv")
 #Question 2
 
 ```{r}
-movies_selected <- select(movie_data, title, runtime, budget)
+movies_selected <- movie_data %>% 
+  select(title, runtime, budget)
 ```
 #Question 3
 ```{r}
-movies_selected %>%
-  summarise(count = sum(is.na(title)))
 movies_selected %>% 
-summarise(count = sum(is.na(runtime)))
-movies_selected %>% 
-  summarise(count = sum(is.na(budget)))
+  summarise(na_runtime = sum(is.na(runtime)),
+            na_title = sum(is.na(title)),
+            na_budget = sum(is.na(budget)))
 ```
 
 #Question 4
 ```{r}
 movies_runtime <- movies_selected %>% 
-  mutate(runtime = na_if (runtime, "NA")) %>% 
-  mutate(runtime = na_if (runtime, "0"))
+  mutate(runtime = na_if (runtime, "NA"))
 
 movies_runtime %>% 
 summarise(count = sum(is.na(runtime)))
@@ -39,8 +37,6 @@ movies_imputed <- movies_runtime %>%
 
 movies_imputed %>% 
 summarise(count = sum(is.na(runtime)))
-
-
 ```
 #Question 6
 ```{r}
@@ -53,10 +49,36 @@ slice_min(runtime, n = 10)
 #Question 7
 
 ```{r}
-movies_imputed %>% 
+movies_imputed <- movies_imputed %>% 
   select(budget) %>% 
   mutate(budget = if_else(budget < 100, median(budget), budget))
 ```
+#Extension
+
+#question 1
+
+```{r}
+movie_budgets <- movies_imputed %>%
+  mutate(
+    budget_type = case_when(
+      budget < 12e6 ~ "Small budget",
+      budget < 40e6 ~ "Medium budget",
+      budget >= 40e6 ~ "Big budget"
+      )
+    )
+
+movie_budgets
+```
+#Question 2
+
+```{r}
+movie_data %>%
+  summarise(across(where(is.numeric), ~sum(is.na(.x))))
+
+movie_data %>%
+  summarise(across(where(is.character), ~sum(is.na(.x))))
+```
+
 
 
 
