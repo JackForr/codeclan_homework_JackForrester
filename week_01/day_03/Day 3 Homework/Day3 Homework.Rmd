@@ -18,8 +18,12 @@ movies_selected <- movie_data %>%
 ```{r}
 movies_selected %>% 
   summarise(na_runtime = sum(is.na(runtime)),
-            na_title = sum(is.na(title)),
-            na_budget = sum(is.na(budget)))
+              na_title = sum(is.na(title)),
+             na_budget = sum(is.na(budget)))
+#OR
+
+movies_selected %>% 
+  summary(across(.fns = ~sum(is.na(.x))))
 ```
 
 #Question 4
@@ -28,7 +32,7 @@ movies_runtime <- movies_selected %>%
   mutate(runtime = na_if (runtime, "NA"))
 
 movies_runtime %>% 
-summarise(count = sum(is.na(runtime)))
+  summarise(count = sum(is.na(runtime)))
 ```
 #Question 5
 ```{r}
@@ -36,7 +40,7 @@ movies_imputed <- movies_runtime %>%
   mutate(runtime = coalesce(runtime, median(runtime, na.rm = TRUE)))
 
 movies_imputed %>% 
-summarise(count = sum(is.na(runtime)))
+  summarise(count = sum(is.na(runtime)))
 ```
 #Question 6
 ```{r}
@@ -44,7 +48,7 @@ movies_imputed %>%
   slice_max(runtime, n = 10)
 
 movies_imputed %>% 
-slice_min(runtime, n = 10)
+  slice_min(runtime, n = 10)
 ```
 #Question 7
 
@@ -58,16 +62,12 @@ movies_imputed <- movies_imputed %>%
 #question 1
 
 ```{r}
-movie_budgets <- movies_imputed %>%
+movie_budgets <- movies_imputed %>% 
   mutate(
     budget_type = case_when(
       budget < 12e6 ~ "Small budget",
       budget < 40e6 ~ "Medium budget",
-      budget >= 40e6 ~ "Big budget"
-      )
-    )
-
-movie_budgets
+      budget >= 40e6 ~ "Big budget"))
 ```
 #Question 2
 
