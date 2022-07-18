@@ -1,0 +1,64 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+```
+
+#Read in and clean names
+```{r}
+card <- read_csv("data/CardBase.csv")
+customer <- read_csv("data/CustomerBase.csv")
+fraud <- read_csv("data/FraudBase.csv")
+transaction <- read_csv("data/TransactionBase.csv")
+clean_card <- janitor::clean_names(card)
+clean_customer <- janitor::clean_names(customer)
+clean_fraud <- janitor::clean_names(fraud)
+clean_transaction <- janitor::clean_names(transaction)
+```
+#Joining card and customer by customer_id
+```{r}
+left_join(clean_card, clean_customer, "cust_id")
+```
+#full joining fraud and transaction details
+```{r}
+full_join(clean_fraud, clean_transaction, "transaction_id")
+```
+#semi join
+```{r}
+semi_join(clean_card, clean_transaction, 
+          by = c("card_number" = "credit_card_id") )
+```
+#tidyr separations and unites
+```{r}
+hats <- read_csv("data/hat_observations.csv")
+
+tidy_hats <- hats %>% 
+  separate(observation, c("colour", "style"), sep = ",") %>% 
+  unite(date, c("day", "month", "year"), sep = "/")
+```
+#Extension 2.1
+
+```{r}
+transaction_fraud_data <- left_join(clean_fraud, clean_transaction, "transaction_id") 
+
+card_customer_data <- left_join(clean_card, clean_customer, "cust_id")
+
+left_join(transaction_fraud_data, card_customer_data, 
+          by = c("credit_card_id" = "card_number"))
+  
+
+```
+
+#2.2
+```{r}
+exam_scores <- read_csv("data/exam_scores.csv")
+
+exam_scores %>% 
+  pivot_longer(cols = starts_with("e"),
+               names_to = "exam_question",
+               values_to = "score"
+               )
+```
+
