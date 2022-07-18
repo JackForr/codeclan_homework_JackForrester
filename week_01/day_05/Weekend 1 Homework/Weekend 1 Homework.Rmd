@@ -1,0 +1,65 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+#Reading & Viewing
+```{r}
+library(tidyverse)
+library(dplyr)
+library(skimr)
+library(janitor)
+books <- read_csv("books.csv")
+skim(books)
+names(books)
+view(books)
+clean_names(books)
+books <- select(books, -rowid)
+```
+#Investigating Missing Values
+```{r}
+books %>% 
+  summarise(count = sum(is.na(books)))
+```
+#Top 5 rated Authors with over 1000 ratings
+```{r}
+books %>% 
+  group_by(authors) %>% 
+  filter(ratings_count > 1000) %>% 
+  summarise(mean_author_rating = mean(average_rating), n = n()) %>%
+  arrange(desc(mean_author_rating), .by_group = TRUE) %>% 
+  head(5)
+```
+
+#Top 5 rated books
+```{r}
+books %>% 
+  filter(ratings_count > 1000) %>% 
+  arrange(desc(average_rating), n = n()) %>% 
+  head(5)
+```
+#Top 5 publishers by length
+```{r}
+books %>% 
+  group_by(publisher) %>% 
+  summarise(mean_publisher_length = mean(num_pages), n = n()) %>% 
+  filter(n >= 10) %>% 
+  arrange(desc(mean_publisher_length), .by_group = TRUE) %>% 
+  head(5)
+```
+#Number of short books vs long books
+```{r}
+books %>% 
+  select(num_pages) %>% 
+  mutate(book_length = if_else(num_pages >= 1000, "long_book", "short book")) %>% 
+  group_by(book_length) %>% 
+  summarise(n = n())
+```
+#How long to read
+```{r}
+books %>% 
+  mutate(reading_time = case_when(
+    num_pages <= 100 ~ "one day",
+    num_pages <= 500 ~ "one week",
+    num_pages <= 1000 ~ "two weeks",
+    TRUE ~ "long time")) 
+```
