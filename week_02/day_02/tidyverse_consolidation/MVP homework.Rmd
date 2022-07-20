@@ -29,12 +29,20 @@ codeclan_tweets %>%
 codeclan_tweets %>% 
   mutate(media_type = coalesce(media_type, "text")) %>% 
   group_by(media_type) %>% 
-  summarise(sum(favorite_count))
+  summarise(total_fav_count = sum(favorite_count)) %>% 
+  arrange(desc(total_fav_count))
+  
 ```
 #Question 5
 ```{r}
 codeclan_tweets %>% 
-  summarise(mean(display_text_width))
+  summarise(mean_tweet_length = mean(display_text_width))
+
+#or
+
+code_clan_tweets_text <- codeclan_tweets %>%
+  mutate(count_str_length = str_length(text)) %>%
+  select(count_str_length, display_text_width)
 ```
 #Question 6
 
@@ -51,6 +59,27 @@ codeclan_hashtags <- left_join(tweet_info, codeclan_tweets, "tweet_id") %>%
   select(tweet_id, hashtags) %>% 
   mutate(hashtags = str_to_lower(hashtags)) %>% 
   drop_na()
+```
+#Question 8 
+```{r}
+multiple_hashtags <- codeclan_hashtags %>% 
+  mutate(first_letters = str_sub(hashtags, 1, 2)) %>% 
+  filter(str_detect(first_letters, "c\\("))
+```
+#Question 9
+```{r}
+codeclan_tweets %>% 
+  mutate(lowcase_tweets = str_to_lower(text)) %>% 
+  filter(str_detect(lowcase_tweets, "edinburgh")) %>% 
+  summarise(count = n())
+```
+#Question 10 
+```{r}
+pattern <- "@[a-zA-Z0-9_]+"
+
+codeclan_tweets %>% 
+  select(text) %>% 
+  str_extract_all(pattern) 
 ```
 
 
