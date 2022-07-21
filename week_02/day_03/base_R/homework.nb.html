@@ -1771,200 +1771,127 @@ pre code {
 <p>#question 1</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxud2VhdGhlcl9saXN0XG5cbmBgYFxuYGBgIn0= -->
-<pre class="r"><code>```r
-weather_list
-</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud2VhdGhlcl9saXN0IDwtIGxpc3QoXG4gIFwidGh1cnNkYXlcIiA9IGxpc3QodGVtcGVyYXR1cmUgPSAxOSwgcmFpbl9jaGFuY2UgPSA0MCwgd2luZF9zcGVlZCA9IDUpLFxuICBcImZyaWRheVwiID0gbGlzdCh0ZW1wZXJhdHVyZSA9IDE4LCByYWluX2NoYW5jZSA9IDgwLCB3aW5kX3NwZWVkID0gMTApLFxuICBcInNhdHVyZGF5XCIgPSBsaXN0KHRlbXBlcmF0dXJlID0gMjIsIHJhaW5fY2hhbmNlID0gNzAsIHdpbmRfc3BlZWQgPSAzKVxuKVxuYGBgIn0= -->
+<pre class="r"><code>weather_list &lt;- list(
+  &quot;thursday&quot; = list(temperature = 19, rain_chance = 40, wind_speed = 5),
+  &quot;friday&quot; = list(temperature = 18, rain_chance = 80, wind_speed = 10),
+  &quot;saturday&quot; = list(temperature = 22, rain_chance = 70, wind_speed = 3)
+)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>#question 2</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud2VhdGhlcl9saXN0W1sxXV1bWzJdXVxuXG53ZWF0aGVyX2xpc3RbWzJdXVtbM11dXG5cbndlYXRoZXJfbGlzdFtbMV1dW1sxXV1cbmBgYCJ9 -->
+<pre class="r"><code>weather_list[[1]][[2]]
 
-&lt;!-- rnb-output-begin eyJkYXRhIjoiJHRodXJzZGF5XG4kdGh1cnNkYXkkdGVtcGVyYXR1cmVcblsxXSAxOVxuXG4kdGh1cnNkYXkkcmFpbl9jaGFuY2VcblsxXSA0MFxuXG4kdGh1cnNkYXkkd2luZF9zcGVlZFxuWzFdIDVcblxuXG4kZnJpZGF5XG4kZnJpZGF5JHRlbXBlcmF0dXJlXG5bMV0gMThcblxuJGZyaWRheSRyYWluX2NoYW5jZVxuWzFdIDgwXG5cbiRmcmlkYXkkd2luZF9zcGVlZFxuWzFdIDEwXG5cblxuJHNhdHVyZGF5XG4kc2F0dXJkYXkkdGVtcGVyYXR1cmVcblsxXSAyMlxuXG4kc2F0dXJkYXkkcmFpbl9jaGFuY2VcblsxXSA3MFxuXG4kc2F0dXJkYXkkd2luZF9zcGVlZFxuWzFdIDNcbiJ9 --&gt;
-</code></pre>
-<p>$thursday <span class="math inline">\(thursday\)</span>temperature
-[1] 19</p>
-<p><span class="math inline">\(thursday\)</span>rain_chance [1] 40</p>
-<p><span class="math inline">\(thursday\)</span>wind_speed [1] 5</p>
-<p>$friday <span class="math inline">\(friday\)</span>temperature [1]
-18</p>
-<p><span class="math inline">\(friday\)</span>rain_chance [1] 80</p>
-<p><span class="math inline">\(friday\)</span>wind_speed [1] 10</p>
-<p>$saturday <span class="math inline">\(saturday\)</span>temperature
-[1] 22</p>
-<p><span class="math inline">\(saturday\)</span>rain_chance [1] 70</p>
-<p><span class="math inline">\(saturday\)</span>wind_speed [1] 3</p>
-<pre><code>
+weather_list[[2]][[3]]
 
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-#question 2
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxud2VhdGhlcl9saXN0W1sxXV1bWzFdXVxuXG5gYGBcbmBgYCJ9 --&gt;
-
-```r
-```r
-weather_list[[1]][[1]]
-</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiWzFdIDE5XG4ifQ== --&gt;
-</code></pre>
-<p>[1] 19</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-#question 3 
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxud2VhdGhlcl9tYXRyaXggPC0gbWF0cml4KGMoMjAsIDE5LCAyMiwgMjIsIDIwLCAyMCAsIDIwLCAyMSwgMjEsIDIyLCAyMiwgMjIsIDIwLCAxOSksIG5yb3cgPSAyLCBuY29sID0gNylcblxud2VhdGhlcl9tYXRyaXhcbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-weather_matrix &lt;- matrix(c(20, 19, 22, 22, 20, 20 , 20, 21, 21, 22, 22, 22, 20, 19), nrow = 2, ncol = 7)
+weather_list[[1]][[1]]</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>#question 3</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud2VhdGhlcl9tYXRyaXggPC0gbWF0cml4KGMoMjAsIDE5LCAyMiwgMjIsIDIwLCAyMCAsIDIwLCAyMSwgMjEsIDIyLCAyMiwgMjIsIDIwLCAxOSksIG5yb3cgPSAyLCBuY29sID0gNylcblxud2VhdGhlcl9tYXRyaXhcbmBgYCJ9 -->
+<pre class="r"><code>weather_matrix &lt;- matrix(c(20, 19, 22, 22, 20, 20 , 20, 21, 21, 22, 22, 22, 20, 19), nrow = 2, ncol = 7)
 
 weather_matrix</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiICAgICBbLDFdIFssMl0gWywzXSBbLDRdIFssNV0gWyw2XSBbLDddXG5bMSxdICAgMjAgICAyMiAgIDIwICAgMjAgICAyMSAgIDIyICAgMjBcblsyLF0gICAxOSAgIDIyICAgMjAgICAyMSAgIDIyICAgMjIgICAxOVxuIn0= --&gt;
-</code></pre>
-<pre><code> [,1] [,2] [,3] [,4] [,5] [,6] [,7]</code></pre>
-<p>[1,] 20 22 20 20 21 22 20 [2,] 19 22 20 21 22 22 19</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-#question 4
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxud2VhdGhlcl9tYXRyaXhbICwgYygxLCAzLCA1KV1cblxuYGBgXG5gYGAifQ== --&gt;
-
-```r
-```r
-weather_matrix[ , c(1, 3, 5)]
-</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-output-begin eyJkYXRhIjoiICAgICBbLDFdIFssMl0gWywzXVxuWzEsXSAgIDIwICAgMjAgICAyMVxuWzIsXSAgIDE5ICAgMjAgICAyMlxuIn0= --&gt;
-</code></pre>
-<pre><code> [,1] [,2] [,3]</code></pre>
-<p>[1,] 20 20 21 [2,] 19 20 22</p>
-<pre><code>
-
-
-&lt;!-- rnb-output-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-#question 5
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYW5zd2VyIDwtIGZ1bmN0aW9uKHgpXG5pZih4IDwgMTApe1xuICByZXR1cm4oeClcbiAgaWYoeCA+IDEwKXtcbiAgICByZXR1cm4oeCAvIDEwKVxuICB9XG59IGVsc2Uge1xuICBwcmludChcIkludmFsaWQgaW5wdXRcIilcbn1cblxuYW5zd2VyKDEwKVxuYGBgIn0= --&gt;
-
-```r
-answer &lt;- function(x)
-if(x &lt; 10){
-  return(x)
-  if(x &gt; 10){
-    return(x / 10)
-  }
-} else {
-  print(&quot;Invalid input&quot;)
-}
-
-answer(10)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiSW52YWxpZCBpbnB1dFwiXG4ifQ== -->
-<pre><code>[1] &quot;Invalid input&quot;</code></pre>
-<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>#question 4</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud2VhdGhlcl9tYXRyaXhbMiwgM11cbndlYXRoZXJfbWF0cml4WzIsIDE6N11cbndlYXRoZXJfbWF0cml4WyAsIGMoMSwgMywgNSldXG5gYGAifQ== -->
+<pre class="r"><code>weather_matrix[2, 3]
+weather_matrix[2, 1:7]
+weather_matrix[ , c(1, 3, 5)]</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>#question 5</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYW5zd2VyIDwtIGZ1bmN0aW9uKHgpIHtcbiAgaWYgKGlzLmNoYXJhY3Rlcih4KSkge1xuICAgIHJldHVybihwYXN0ZShcIlRoZSBhbnN3ZXIgaXM6XCIsIHgpKVxuICB9XG5cbiAgaWYgKGlzLm51bWVyaWMoeCkpIHtcbiAgICBpZiAoeCA8IDEwKSB7XG4gICAgICByZXR1cm4oeClcbiAgICB9IGVsc2Uge1xuICAgICAgcmV0dXJuKHggLyAxMClcbiAgICB9XG4gIH1cblxuICByZXR1cm4oXCJJbnZhbGlkIGlucHV0XCIpXG59XG5gYGAifQ== -->
+<pre class="r"><code>answer &lt;- function(x) {
+  if (is.character(x)) {
+    return(paste(&quot;The answer is:&quot;, x))
+  }
+
+  if (is.numeric(x)) {
+    if (x &lt; 10) {
+      return(x)
+    } else {
+      return(x / 10)
+    }
+  }
+
+  return(&quot;Invalid input&quot;)
+}</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>#question 6</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxudmVjdG9yX2NoZWNrIDwtIGZ1bmN0aW9uKHgseSl7XG4gIGlmKHggPT0geSl7XG4gICAgcHJpbnQoXFxFeGFjdGx5IHRoZSBzYW1lXFwpXG4gIH0gZWxzZXtcbiAgICBwcmludChcXERpZmZlcmVudFxcKVxuICB9XG59XG5gYGBcbmBgYCJ9 -->
-<pre class="r"><code>```r
-vector_check &lt;- function(x,y){
-  if(x == y){
-    print(\Exactly the same\)
-  } else{
-    print(\Different\)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaXNfc2FtZV92ZWN0b3IgPC0gZnVuY3Rpb24odmVjdG9yXzEsIHZlY3Rvcl8yKSB7XG4gIGlmIChhbGwodmVjdG9yXzEgPT0gdmVjdG9yXzIpKSB7XG4gICAgcmV0dXJuKFwiRXhhY3RseSB0aGUgc2FtZVwiKVxuICB9XG5cbiAgaWYgKGFsbChzb3J0KHZlY3Rvcl8xKSA9PSBzb3J0KHZlY3Rvcl8yKSkpIHtcbiAgICByZXR1cm4oXCJUaGUgc2FtZVwiKVxuICB9XG5cbiAgcmV0dXJuKFwiRGlmZmVyZW50XCIpXG59XG5gYGAifQ== -->
+<pre class="r"><code>is_same_vector &lt;- function(vector_1, vector_2) {
+  if (all(vector_1 == vector_2)) {
+    return(&quot;Exactly the same&quot;)
   }
+
+  if (all(sort(vector_1) == sort(vector_2))) {
+    return(&quot;The same&quot;)
+  }
+
+  return(&quot;Different&quot;)
 }</code></pre>
-<pre><code>
-&lt;!-- rnb-source-end --&gt;
-
-&lt;!-- rnb-chunk-end --&gt;
-
-
-&lt;!-- rnb-text-begin --&gt;
-
-
-#question 7 
-
-&lt;!-- rnb-text-end --&gt;
-
-
-&lt;!-- rnb-chunk-begin --&gt;
-
-
-&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubXVsdGlwbGljYXRpb25fbWF0cml4IDwtIG1hdHJpeCggLCBucm93ID0gMTIsIG5jb2wgPSAxMilcbmBgYFxuYGBgIn0= --&gt;
-
-```r
-```r
-multiplication_matrix &lt;- matrix( , nrow = 12, ncol = 12)</code></pre>
-<p>```</p>
 <!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>#question 7</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubXVsdGlwbGljYXRpb25fdGFibGVcblxuYGBgIn0= -->
+<pre class="r"><code>multiplication_table
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgWywxXSBbLDJdIFssM10gWyw0XSBbLDVdIFssNl0gWyw3XSBbLDhdXG4gWzEsXSAgICAxICAgIDIgICAgMyAgICA0ICAgIDUgICAgNiAgICA3ICAgIDhcbiBbMixdICAgIDIgICAgNCAgICA2ICAgIDggICAxMCAgIDEyICAgMTQgICAxNlxuIFszLF0gICAgMyAgICA2ICAgIDkgICAxMiAgIDE1ICAgMTggICAyMSAgIDI0XG4gWzQsXSAgICA0ICAgIDggICAxMiAgIDE2ICAgMjAgICAyNCAgIDI4ICAgMzJcbiBbNSxdICAgIDUgICAxMCAgIDE1ICAgMjAgICAyNSAgIDMwICAgMzUgICA0MFxuIFs2LF0gICAgNiAgIDEyICAgMTggICAyNCAgIDMwICAgMzYgICA0MiAgIDQ4XG4gWzcsXSAgICA3ICAgMTQgICAyMSAgIDI4ICAgMzUgICA0MiAgIDQ5ICAgNTZcbiBbOCxdICAgIDggICAxNiAgIDI0ICAgMzIgICA0MCAgIDQ4ICAgNTYgICA2NFxuIFs5LF0gICAgOSAgIDE4ICAgMjcgICAzNiAgIDQ1ICAgNTQgICA2MyAgIDcyXG5bMTAsXSAgIDEwICAgMjAgICAzMCAgIDQwICAgNTAgICA2MCAgIDcwICAgODBcblsxMSxdICAgMTEgICAyMiAgIDMzICAgNDQgICA1NSAgIDY2ICAgNzcgICA4OFxuWzEyLF0gICAxMiAgIDI0ICAgMzYgICA0OCAgIDYwICAgNzIgICA4NCAgIDk2XG4gICAgICBbLDldIFssMTBdIFssMTFdIFssMTJdXG4gWzEsXSAgICA5ICAgIDEwICAgIDExICAgIDEyXG4gWzIsXSAgIDE4ICAgIDIwICAgIDIyICAgIDI0XG4gWzMsXSAgIDI3ICAgIDMwICAgIDMzICAgIDM2XG4gWzQsXSAgIDM2ICAgIDQwICAgIDQ0ICAgIDQ4XG4gWzUsXSAgIDQ1ICAgIDUwICAgIDU1ICAgIDYwXG4gWzYsXSAgIDU0ICAgIDYwICAgIDY2ICAgIDcyXG4gWzcsXSAgIDYzICAgIDcwICAgIDc3ICAgIDg0XG4gWzgsXSAgIDcyICAgIDgwICAgIDg4ICAgIDk2XG4gWzksXSAgIDgxICAgIDkwICAgIDk5ICAgMTA4XG5bMTAsXSAgIDkwICAgMTAwICAgMTEwICAgMTIwXG5bMTEsXSAgIDk5ICAgMTEwICAgMTIxICAgMTMyXG5bMTIsXSAgMTA4ICAgMTIwICAgMTMyICAgMTQ0XG4ifQ== -->
+<pre><code>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+ [1,]    1    2    3    4    5    6    7    8
+ [2,]    2    4    6    8   10   12   14   16
+ [3,]    3    6    9   12   15   18   21   24
+ [4,]    4    8   12   16   20   24   28   32
+ [5,]    5   10   15   20   25   30   35   40
+ [6,]    6   12   18   24   30   36   42   48
+ [7,]    7   14   21   28   35   42   49   56
+ [8,]    8   16   24   32   40   48   56   64
+ [9,]    9   18   27   36   45   54   63   72
+[10,]   10   20   30   40   50   60   70   80
+[11,]   11   22   33   44   55   66   77   88
+[12,]   12   24   36   48   60   72   84   96
+      [,9] [,10] [,11] [,12]
+ [1,]    9    10    11    12
+ [2,]   18    20    22    24
+ [3,]   27    30    33    36
+ [4,]   36    40    44    48
+ [5,]   45    50    55    60
+ [6,]   54    60    66    72
+ [7,]   63    70    77    84
+ [8,]   72    80    88    96
+ [9,]   81    90    99   108
+[10,]   90   100   110   120
+[11,]   99   110   121   132
+[12,]  108   120   132   144</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQojcXVlc3Rpb24gMQpgYGB7cn0Kd2VhdGhlcl9saXN0IDwtIGxpc3QoCiAgInRodXJzZGF5IiA9IGxpc3QodGVtcGVyYXR1cmUgPSAxOSwgcmFpbl9jaGFuY2UgPSA0MCwgd2luZF9zcGVlZCA9IDUpLAogICJmcmlkYXkiID0gbGlzdCh0ZW1wZXJhdHVyZSA9IDE4LCByYWluX2NoYW5jZSA9IDgwLCB3aW5kX3NwZWVkID0gMTApLAogICJzYXR1cmRheSIgPSBsaXN0KHRlbXBlcmF0dXJlID0gMjIsIHJhaW5fY2hhbmNlID0gNzAsIHdpbmRfc3BlZWQgPSAzKQopCmBgYAojcXVlc3Rpb24gMgpgYGB7cn0Kd2VhdGhlcl9saXN0W1sxXV1bWzJdXQoKd2VhdGhlcl9saXN0W1syXV1bWzNdXQoKd2VhdGhlcl9saXN0W1sxXV1bWzFdXQpgYGAKCiNxdWVzdGlvbiAzIApgYGB7cn0Kd2VhdGhlcl9tYXRyaXggPC0gbWF0cml4KGMoMjAsIDE5LCAyMiwgMjIsIDIwLCAyMCAsIDIwLCAyMSwgMjEsIDIyLCAyMiwgMjIsIDIwLCAxOSksIG5yb3cgPSAyLCBuY29sID0gNykKCndlYXRoZXJfbWF0cml4CmBgYAojcXVlc3Rpb24gNApgYGB7cn0Kd2VhdGhlcl9tYXRyaXhbMiwgM10Kd2VhdGhlcl9tYXRyaXhbMiwgMTo3XQp3ZWF0aGVyX21hdHJpeFsgLCBjKDEsIDMsIDUpXQpgYGAKI3F1ZXN0aW9uIDUKYGBge3J9CmFuc3dlciA8LSBmdW5jdGlvbih4KQppZih4IDwgMTApewogIHJldHVybih4KQogIGlmKHggPiAxMCl7CiAgICByZXR1cm4oeCAvIDEwKQogIH0KfSBlbHNlIHsKICBwcmludCgiSW52YWxpZCBpbnB1dCIpCn0KYGBgCgoKCgoKI3F1ZXN0aW9uIDYgCmBgYHtyfQp2ZWN0b3JfY2hlY2sgPC0gZnVuY3Rpb24oeCx5KXsKICBpZih4ID09IHkpewogICAgcHJpbnQoIkV4YWN0bHkgdGhlIHNhbWUiKQogIH0gZWxzZXsKICAgIHByaW50KCJEaWZmZXJlbnQiKQogIH0KfQpgYGAKCiNxdWVzdGlvbiA3IApgYGB7cn0KbXVsdGlwbGljYXRpb25fbWF0cml4IDwtIG1hdHJpeCggLCBucm93ID0gMTIsIG5jb2wgPSAxMikKYGBgCgoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQojcXVlc3Rpb24gMQpgYGB7cn0Kd2VhdGhlcl9saXN0IDwtIGxpc3QoCiAgInRodXJzZGF5IiA9IGxpc3QodGVtcGVyYXR1cmUgPSAxOSwgcmFpbl9jaGFuY2UgPSA0MCwgd2luZF9zcGVlZCA9IDUpLAogICJmcmlkYXkiID0gbGlzdCh0ZW1wZXJhdHVyZSA9IDE4LCByYWluX2NoYW5jZSA9IDgwLCB3aW5kX3NwZWVkID0gMTApLAogICJzYXR1cmRheSIgPSBsaXN0KHRlbXBlcmF0dXJlID0gMjIsIHJhaW5fY2hhbmNlID0gNzAsIHdpbmRfc3BlZWQgPSAzKQopCmBgYAojcXVlc3Rpb24gMgpgYGB7cn0Kd2VhdGhlcl9saXN0W1sxXV1bWzJdXQoKd2VhdGhlcl9saXN0W1syXV1bWzNdXQoKd2VhdGhlcl9saXN0W1sxXV1bWzFdXQpgYGAKCiNxdWVzdGlvbiAzIApgYGB7cn0Kd2VhdGhlcl9tYXRyaXggPC0gbWF0cml4KGMoMjAsIDE5LCAyMiwgMjIsIDIwLCAyMCAsIDIwLCAyMSwgMjEsIDIyLCAyMiwgMjIsIDIwLCAxOSksIG5yb3cgPSAyLCBuY29sID0gNykKCndlYXRoZXJfbWF0cml4CmBgYAojcXVlc3Rpb24gNApgYGB7cn0Kd2VhdGhlcl9tYXRyaXhbMiwgM10Kd2VhdGhlcl9tYXRyaXhbMiwgMTo3XQp3ZWF0aGVyX21hdHJpeFsgLCBjKDEsIDMsIDUpXQpgYGAKCiNxdWVzdGlvbiA1CmBgYHtyfQphbnN3ZXIgPC0gZnVuY3Rpb24oeCkgewogIGlmIChpcy5jaGFyYWN0ZXIoeCkpIHsKICAgIHJldHVybihwYXN0ZSgiVGhlIGFuc3dlciBpczoiLCB4KSkKICB9CgogIGlmIChpcy5udW1lcmljKHgpKSB7CiAgICBpZiAoeCA8IDEwKSB7CiAgICAgIHJldHVybih4KQogICAgfSBlbHNlIHsKICAgICAgcmV0dXJuKHggLyAxMCkKICAgIH0KICB9CgogIHJldHVybigiSW52YWxpZCBpbnB1dCIpCn0KYGBgCgoKI3F1ZXN0aW9uIDYgCmBgYHtyfQppc19zYW1lX3ZlY3RvciA8LSBmdW5jdGlvbih2ZWN0b3JfMSwgdmVjdG9yXzIpIHsKICBpZiAoYWxsKHZlY3Rvcl8xID09IHZlY3Rvcl8yKSkgewogICAgcmV0dXJuKCJFeGFjdGx5IHRoZSBzYW1lIikKICB9CgogIGlmIChhbGwoc29ydCh2ZWN0b3JfMSkgPT0gc29ydCh2ZWN0b3JfMikpKSB7CiAgICByZXR1cm4oIlRoZSBzYW1lIikKICB9CgogIHJldHVybigiRGlmZmVyZW50IikKfQpgYGAKCgojcXVlc3Rpb24gNyAKYGBge3J9Cm11bHRpcGxpY2F0aW9uX3RhYmxlIDwtIG1hdHJpeChucm93ID0gMTIsIG5jb2wgPSAxMikKCmZvciAob3V0ZXJfZmFjdG9yIGluIDE6MTIpIHsKICBmb3IgKGlubmVyX2ZhY3RvciBpbiAxOjEyKSB7CiAgICBtdWx0aXBsaWNhdGlvbl90YWJsZVtvdXRlcl9mYWN0b3IsIGlubmVyX2ZhY3Rvcl0gPSBvdXRlcl9mYWN0b3IgKiBpbm5lcl9mYWN0b3IKICB9Cn0KYGBgCgoK</div>
 
 
 
