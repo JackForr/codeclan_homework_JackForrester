@@ -130,19 +130,9 @@ WHERE first_name IS NOT NULL
 GROUP BY first_name 
 ORDER BY count(id) DESC, first_name ;
 
---Q16
-SELECT
-count(id) AS num_grade,
-department
-FROM employees 
-WHERE grade = 1
-GROUP BY department 
 
-SELECT 
-count(id) / (count(id) WHERE grade = 1) AS department_size,
-department
-FROM employees
-GROUP BY department ;
+
+
 
 
 
