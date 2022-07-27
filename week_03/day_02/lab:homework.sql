@@ -66,7 +66,7 @@ count(E.id) AS employee_num,
 T."name",
 T.id
 FROM employees AS E
-LEFT JOIN teams AS T ON E.team_id  = T.id
+INNER JOIN teams AS T ON E.team_id  = T.id
 GROUP BY T."name", T.id
 ORDER BY employee_num;
 
@@ -76,7 +76,7 @@ Cast(T.charge_cost AS integer)*count(E.id) AS total_day_charge,
 T."name",
 T.id
 FROM employees AS E
-LEFT JOIN teams AS T ON E.team_id  = T.id
+INNER JOIN teams AS T ON E.team_id  = T.id
 GROUP BY T."name", T.id ;
 
 --4c
@@ -85,7 +85,7 @@ Cast(T.charge_cost AS integer)*count(E.id) AS total_day_charge,
 T."name",
 T.id
 FROM employees AS E
-LEFT JOIN teams AS T ON E.team_id  = T.id
+INNER JOIN teams AS T ON E.team_id  = T.id
 GROUP BY T."name", T.id 
 HAVING (Cast(T.charge_cost AS integer)*count(E.id)) > 5000;
 
