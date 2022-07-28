@@ -10,7 +10,7 @@ SELECT
 concat (first_name, ' ', last_name) AS full_name,
 department 
 FROM employees
-ORDER BY department, last_name ;
+ORDER BY department NULLS LAST , last_name NULLS LAST ;
 
 --Q3
 SELECT 
@@ -50,7 +50,7 @@ GROUP BY pension_enrol ;
 --Q7
 SELECT *
 FROM employees 
-WHERE pension_enrol = FALSE 
+WHERE pension_enrol = FALSE AND department = 'Accounting'
 ORDER BY salary DESC NULLS LAST ;
 
 --Q8
@@ -106,9 +106,10 @@ FROM employees
 WHERE country = 'Japan' AND fte_hours = (SELECT
 	fte_hours 
 	FROM employees 
-	ORDER BY fte_hours, first_name
+	GROUP BY fte_hours 
+	ORDER BY count(*)
 	LIMIT 1)
-ORDER BY salary 
+ORDER BY salary ASC 
 LIMIT 1;
 
 --Q14
@@ -130,10 +131,13 @@ WHERE first_name IS NOT NULL
 GROUP BY first_name 
 ORDER BY count(id) DESC, first_name ;
 
-
-
-
-
+--Q16
+SELECT 
+department,
+sum(CAST(grade = '1' AS int)) / cast(count(id) AS REAL)
+AS proportion_g1s
+FROM employees 
+GROUP BY department;
 
 
 
