@@ -15,23 +15,32 @@ devices <- qb_device_data
 ```
 #q1
 ```{r}
+col_scheme <- c("#E89FE9", "#50434F", "#B6A7B5", "#F9A472", "#BD7040")
 revenue %>% 
   ggplot(aes(x = Year,
          y = Revenue,
          fill = Product))+
   geom_col()+
-  labs(title = "Annual Revenue Breakdown by Product")
+  labs(title = "Annual Revenue Breakdown by Product",
+       y = "Revenue (£)")+
+  scale_fill_manual(values = c("Accesories" = "#E89FE9",
+                               "Smart Watches" = "#50434F",
+                               "Subscription Services" = "#B6A7B5",
+                               "Trackers" = "#BD7040"))+
+  theme_light()
 ```
 #q2
 ```{r}
 kwikbit_sales <- sales %>% 
-  filter(Cashflow == "Kwikbit Unit 1 Sales",
-         Date >= "2019-01-01")
+  filter(Cashflow == "Kwikbit Unit 1 Sales")
 
 kwikbit_sales %>% 
   ggplot(aes(x = Date,
              y = Amount))+
-  geom_line()
+  geom_line()+
+  labs(title = "Kwikbit Monthly Sales",
+       y = "Revenue (£)")+
+  theme_light()
 ```
 #q3
 ```{r}
@@ -42,7 +51,12 @@ cost_rev %>%
   ggplot(aes(x = Date,
              y = Amount,
              colour = Cashflow))+
-  geom_line()
+  geom_line()+
+  labs(title = "Monthly Qwikbit Sales",
+       y = "Revenue (£)")+
+  scale_colour_manual(values = c("Cost" = "#E89FE9",
+                               "Total Revenue" = "#50434F"))+
+  theme_light()
 ```
 #q4
 ```{r}
@@ -51,7 +65,14 @@ competitors %>%
              y = Revenue,
              group = Company,
              fill = Company))+
-  geom_area()
+  geom_area()+
+  labs(title = "Industry Sales",
+       y = "revenue £")+
+  scale_fill_manual(values = c("Competitor 1" = "#E89FE9",
+                               "Competitor 2" = "#50434F",
+                               "Competitor 3" = "#B6A7B5",
+                               "Competitor 4" = "#BD7040"))+
+  theme_light()
 ```
 #q5
 ```{r}
@@ -61,7 +82,14 @@ competitors %>%
              group = Company,
              colour = Company))+
   geom_line()+
-  geom_point()
+  geom_point()+
+  labs(title = "Competitor Sales Figures",
+       y = "Revenue £")+
+  scale_colour_manual(values = c("Competitor 1" = "#E89FE9",
+                               "Competitor 2" = "#50434F",
+                               "Competitor 3" = "#B6A7B5",
+                               "Competitor 4" = "#BD7040"))+
+  theme_light()
 ```
 #q6
 ```{r}
@@ -78,10 +106,14 @@ devices %>%
              group = id,
              colour = device))+
   geom_line()+
-  facet_grid(id ~ device)
-```
+  facet_grid(id ~ device)+
+  labs(title = "Step tracking vs competitors",
+       y = "Step counts")+
+  scale_colour_manual(values = c("competitor1" = "#E89FE9",
+                               "competitor2" = "#50434F",
+                               "competitor3" = "#B6A7B5",
+                               "qikbit1" = "#BD7040"))+
+  theme_light()
 
-```{r}
-?cut_number
 ```
 
