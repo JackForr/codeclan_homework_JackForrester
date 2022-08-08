@@ -1,0 +1,87 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(CodeClanData)
+library(tidyr)
+```
+```{r}
+revenue <- qb_revenue_breakdown
+sales <- qb_monthly_sales
+competitors <- qb_competitors
+devices <- qb_device_data
+```
+#q1
+```{r}
+revenue %>% 
+  ggplot(aes(x = Year,
+         y = Revenue,
+         fill = Product))+
+  geom_col()+
+  labs(title = "Annual Revenue Breakdown by Product")
+```
+#q2
+```{r}
+kwikbit_sales <- sales %>% 
+  filter(Cashflow == "Kwikbit Unit 1 Sales",
+         Date >= "2019-01-01")
+
+kwikbit_sales %>% 
+  ggplot(aes(x = Date,
+             y = Amount))+
+  geom_line()
+```
+#q3
+```{r}
+cost_rev <- qb_monthly_sales %>% 
+  filter(Cashflow != "Kwikbit Unit 1 Sales")
+
+cost_rev %>% 
+  ggplot(aes(x = Date,
+             y = Amount,
+             colour = Cashflow))+
+  geom_line()
+```
+#q4
+```{r}
+competitors %>% 
+  ggplot(aes(x = Year,
+             y = Revenue,
+             group = Company,
+             fill = Company))+
+  geom_area()
+```
+#q5
+```{r}
+competitors %>% 
+  ggplot(aes(x = Year,
+             y = Revenue,
+             group = Company,
+             colour = Company))+
+  geom_line()+
+  geom_point()
+```
+#q6
+```{r}
+unique(devices$id)
+unique(devices$device)
+
+devices <- devices %>% 
+  group_by(hours, id, device, ) %>% 
+  summarise(counts = sum(counts), .groups = "keep")
+
+devices %>% 
+  ggplot(aes(x = hours,
+             y = counts, 
+             group = id,
+             colour = device))+
+  geom_line()+
+  facet_grid(id ~ device)
+```
+
+```{r}
+?cut_number
+```
+
