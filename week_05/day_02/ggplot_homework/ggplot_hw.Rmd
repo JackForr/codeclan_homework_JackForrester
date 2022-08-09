@@ -1,0 +1,112 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+#Q1
+```{r}
+library(tidyverse)
+backpack_data <- CodeClanData::backpack
+```
+#Q2
+```{r}
+backpack_data %>% 
+  ggplot(aes(x = backpack_weight))+
+  geom_histogram(col = "white")+
+  labs(title = "Distribution of Backpack Weight",
+       x = "Backpack Weight",
+       y = "Count")+
+  theme_linedraw()
+```
+Histogram shows the distibrution of backpack weights among the sampled school children .
+
+#Q3 Are there differences in backpack weight between sex?
+```{r}
+backpack_data %>% 
+  group_by(backpack_weight, sex) %>% 
+  summarise(count = sum(backpack_weight), .groups = "drop") %>% 
+  ggplot(aes(x = backpack_weight,
+           y = count,
+             fill = sex))+
+  geom_col(col = "white", 
+           position = "dodge")+
+  labs(title = "Male vs Female Backpack Weights",
+       x = "Backpack Weight",
+       y = "Count")+
+  theme_linedraw()
+```
+This bar chart shows the count of backpack weights for each weight and each gender, in weights where there is only one gender of observations the bars are double width. No obvsious difference between sex, other than extremely heav bags belong to males.
+
+#Q4 What is the relationship between body weight and backpack weight?
+```{r}
+backpack_data %>% 
+  ggplot(aes(x = body_weight,
+             y = backpack_weight))+
+  geom_point()+
+  labs(title = "Bodyweight vs Backpack Weight",
+       x = "Bodyweight",
+       y = "Backpack Weight")+
+  theme_linedraw()
+```
+Scatter plot illustrates the relationship between body weight and backpack weight. Backpack weight increases with bodyweight.
+
+#Q5 Is this relationship different between men and women? Choose an appropriate plot and interpret your findings.
+```{r}
+backpack_data %>% 
+  ggplot(aes(x = body_weight,
+             y = backpack_weight,
+             colour = sex))+
+  geom_point()+
+  labs(title = "Bodyweight vs Backpack Weight",
+       x = "Bodyweight",
+       y = "Backpack Weight")+
+  theme_linedraw()
+```
+Scatter plot illustrates the relationship between body weight and backpack weight between males and females. Backpack weight increases with bodyweight for both sexes, with males being heavier and having heavier bags.
+
+#Q6 What proportion of students report back pain?
+```{r}
+backpack_data %>% 
+  mutate(proportion_pain = sum(back_problems)/ nrow(backpack_data)) %>% 
+  mutate(proportion_no_pain = 1.00 - proportion_pain)
+
+prop <- c(0.32, 0.68)
+pie(prop,
+    labels = c("back pain (32%)", "no back pain (68%)"))
+```
+#Q7 Is this proportion different between men and women?
+```{r}
+backpack_data %>% 
+  filter(sex == "Male") %>% 
+  mutate(proportion_pain = sum(back_problems)/ nrow(backpack_data)) %>% 
+  mutate(proportion_no_pain = 1.00 - proportion_pain)
+
+backpack_data %>% 
+  filter(sex == "Female") %>% 
+  mutate(proportion_pain = sum(back_problems)/ nrow(backpack_data)) %>% 
+  mutate(proportion_no_pain = 1.00 - proportion_pain)
+
+prop <- c(0.08, 0.92)
+pie(prop,
+    labels = c("back pain (8%)", "no back pain (92%)"))
+
+prop <- c(0.24, 0.76)
+pie(prop,
+    labels = c("back pain (24%)", "no back pain (76%)"))
+```
+women experience a significantly higher proportion of back pain 
+
+#Q8 create plots to describe the relationship between backpack weight, body weight, gender and reported backpain.
+#Try both backpack_weight and body_weight as well as the ratio.
+
+```{r} 
+backpack_data %>% 
+  mutate(back_problems = as.logical(back_problems)) %>% 
+  ggplot(aes(x = body_weight,
+             y = ratio,
+             colour = sex))+
+  geom_point()+
+  facet_grid(sex ~ back_problems, labeller = "label_both")+
+  theme_linedraw()
+```
+These scatter plots illustrate the relationship between bodyweight and ratio of bodyweight to backpack weight in the instances of back pain and no back pain in males and females.
+
