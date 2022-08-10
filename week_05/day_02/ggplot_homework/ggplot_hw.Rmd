@@ -32,9 +32,10 @@ backpack_data %>%
   labs(title = "Male vs Female Backpack Weights",
        x = "Backpack Weight",
        y = "Count")+
+  facet_wrap(~sex)+
   theme_linedraw()
 ```
-This bar chart shows the count of backpack weights for each weight and each gender, in weights where there is only one gender of observations the bars are double width. No obvsious difference between sex, other than extremely heav bags belong to males.
+This bar chart shows the count of backpack weights for each weight and each gender, in weights where there is only one gender of observations the bars are double width. No obvsious difference between sex, other than extremely heavy bags belong to males.
 
 #Q4 What is the relationship between body weight and backpack weight?
 ```{r}
@@ -59,6 +60,7 @@ backpack_data %>%
   labs(title = "Bodyweight vs Backpack Weight",
        x = "Bodyweight",
        y = "Backpack Weight")+
+  facet_wrap(~sex)+
   theme_linedraw()
 ```
 Scatter plot illustrates the relationship between body weight and backpack weight between males and females. Backpack weight increases with bodyweight for both sexes, with males being heavier and having heavier bags.
