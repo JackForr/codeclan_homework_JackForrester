@@ -68,12 +68,12 @@ Scatter plot illustrates the relationship between body weight and backpack weigh
 #Q6 What proportion of students report back pain?
 ```{r}
 backpack_data %>% 
-  mutate(proportion_pain = sum(back_problems)/ nrow(backpack_data)) %>% 
-  mutate(proportion_no_pain = 1.00 - proportion_pain)
+  mutate(proportion_pain = sum(back_problems)/ nrow(backpack_data)) %>%   mutate(proportion_no_pain = 1.00 - proportion_pain)
 
 prop <- c(0.32, 0.68)
 pie(prop,
     labels = c("back pain (32%)", "no back pain (68%)"))
+
 ```
 #Q7 Is this proportion different between men and women?
 ```{r}

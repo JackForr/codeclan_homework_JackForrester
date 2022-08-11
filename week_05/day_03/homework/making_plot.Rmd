@@ -1,0 +1,57 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(shiny)
+library(bslib)
+```
+
+```{r}
+scottish_exports <- CodeClanData::scottish_exports 
+
+scottish_exports%>% 
+  ggplot(aes(x = year,
+      y = exports,
+      colour = sector))+
+  geom_line()+
+  geom_text(data = scottish_exports %>% 
+              filter(year == "2017"),
+            aes(label = sector),
+            check_overlap = TRUE)+
+  theme_linedraw()+
+  labs(x = "Export volume",
+       y = "Year")
+
+?geom_text
+```
+```{r}
+scottish_exports %>% 
+  filter(year == "2017") %>% 
+  ggplot(aes(x = sector,
+             y = exports,
+             fill = sector))+
+  geom_col()+
+  geom_text(aes(label=sector), position=position_dodge(width=0.5), vjust=-0.25)+
+  theme_linedraw()
+
+
+```
+
+```{r}
+scottish_exports %>% 
+  group_by(year) %>% 
+  mutate(proportion_exports = exports/sum(exports)) %>% 
+  ggplot(aes(x = year,
+             y = proportion_exports,
+             fill = sector))+
+  geom_col(position = "stack")+
+  theme_linedraw()
+
+?geom_col
+  
+```
+
