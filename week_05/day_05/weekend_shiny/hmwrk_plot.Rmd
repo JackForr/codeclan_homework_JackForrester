@@ -1,0 +1,89 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(shiny)
+library(ggplot2)
+library(CodeClanData)
+
+```
+```{r}
+game_sales %>% 
+  mutate(year_of_release = as.factor(year_of_release)) %>% 
+  arrange(year_of_release)
+```
+
+
+
+```{r}
+game_sales %>% 
+  group_by(genre, year_of_release) %>% 
+  summarise(sales = round(mean(sales), 2), .groups = "keep") %>% 
+  mutate(year_of_release = as.factor(year_of_release)) %>% 
+  arrange(year_of_release) %>% 
+  filter(year_of_release == "2012") %>% 
+  ggplot(aes(x = genre,
+             y = sales,
+             fill = "coral"))+
+  geom_col(show.legend = F)+
+  geom_text(aes(label = sales), 
+            size = 4)+
+  coord_flip()+
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_blank(),
+        panel.background = element_blank())+
+  labs(x = "Genre",
+       y = "Sales (£m)")
+```
+```{r}
+game_sales %>% 
+  group_by(genre, year_of_release) %>% 
+  summarise(user_score = round(mean(user_score), 2), .groups = "keep") %>% 
+  mutate(year_of_release = as.factor(year_of_release)) %>% 
+  arrange(year_of_release) %>% 
+  filter(year_of_release == "2012") %>% 
+  ggplot(aes(x = genre,
+             y = user_score,
+             fill = "coral"))+
+  geom_col(show.legend = F)+
+  geom_text(aes(label = user_score), 
+            size = 4)+
+  coord_flip()+
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_blank(),
+        panel.background = element_blank())+
+  labs(x = "Genre",
+       y = "User Score")
+```
+
+```{r}
+game_sales %>% 
+  group_by(genre, year_of_release) %>% 
+  summarise(sales = round(mean(sales), 2), .groups = "keep") %>% 
+  filter(genre == "Action") %>% 
+  ggplot(aes(x = year_of_release,
+             y = sales,
+             colour = genre))+
+  geom_line()+
+  theme(panel.grid = element_blank(),
+        panel.background = element_blank())+
+  labs(x = "Release Year",
+       y = "Sales (£m)")
+```
+```{r}
+game_sales %>% 
+  group_by(genre, year_of_release) %>% 
+  summarise(user_score = round(mean(user_score), 2), .groups = "keep") %>% 
+  filter(genre == "Action") %>% 
+  ggplot(aes(x = year_of_release,
+             y = user_score,
+             colour = genre))+
+  geom_line()+
+  theme(panel.grid = element_blank(),
+        panel.background = element_blank())+
+  labs(x = "Release Year",
+       y = "User Score")
+```
+
