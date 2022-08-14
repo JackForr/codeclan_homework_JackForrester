@@ -11,9 +11,7 @@ library(plotly)
 
 ```
 ```{r}
-game_sales %>% 
-  mutate(year_of_release = as.factor(year_of_release)) %>% 
-  arrange(year_of_release)
+game_sales <- CodeClanData::game_sales
 ```
 
 
@@ -70,9 +68,9 @@ year_vs_sales <- game_sales %>%
   filter(genre == "Action") %>% 
 ggplot(aes(x = year_of_release,
              y = sales,
-             colour = genre))+
-  geom_line(show.legend = F)+
-  geom_point()+
+             fill = genre))+
+  geom_col(show.legend = F)+
+  coord_flip()+
   theme(panel.grid = element_blank(),
         panel.background = element_blank())+
   labs(x = "Release Year",
@@ -90,9 +88,9 @@ year_vs_score <- game_sales %>%
   filter(genre == "Action") %>% 
   ggplot(aes(x = year_of_release,
              y = user_score,
-             colour = genre))+
-  geom_line(show.legend = F)+
-  geom_point()+
+             fill = genre))+
+  geom_col(show.legend = F)+
+ coord_flip()+
   theme(panel.grid = element_blank(),
         panel.background = element_blank())+
   labs(x = "Release Year",

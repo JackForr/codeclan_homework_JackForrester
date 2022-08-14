@@ -4,6 +4,7 @@ library(ggplot2)
 library(CodeClanData)
 library(plotly)
 library(bslib)
+library(shinythemes)
 
 years <- unique(game_sales$year_of_release)
 genres <- unique(game_sales$genre)
@@ -11,7 +12,7 @@ genres <- unique(game_sales$genre)
 game_sales <- CodeClanData::game_sales
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
+ui <- fluidPage(themeSelector(),
   
   # Application title
   titlePanel("Video Game Genre Performance"),
@@ -45,13 +46,13 @@ ui <- fluidPage(
   #Genre plots over time
   fluidRow(
     column(6,
-           tags$h5("Avg. Sales"),
+           tags$h5("Genre Sales by Year"),
            br(),
            br(),
            plotlyOutput("sales_time_plot")),
     
     column(6,
-           tags$h5("Avg. ratings"),
+           tags$h5("Genre Ratings by Year"),
            br(),
            br(),
            plotlyOutput("ratings_time_plot"))
@@ -108,9 +109,8 @@ server <- function(input, output) {
       filter(genre == input$genre_input) %>% 
       ggplot(aes(x = year_of_release,
                  y = sales,
-                 colour = genre))+
-      geom_line(show.legend = F)+
-      geom_point()+
+                 fill = genre))+
+      geom_col(show.legend = T)+
       theme(panel.grid = element_blank(),
             panel.background = element_blank())+
       labs(x = "Release Year",
@@ -124,9 +124,8 @@ server <- function(input, output) {
       filter(genre == input$genre_input) %>% 
       ggplot(aes(x = year_of_release,
                  y = user_score,
-                 colour = genre))+
-      geom_line(show.legend = F)+
-      geom_point()+
+                 fill = genre))+
+      geom_col(show.legend = T)+
       theme(panel.grid = element_blank(),
             panel.background = element_blank())+
       labs(x = "Release Year",
