@@ -1,0 +1,84 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(gtools)
+library(tidyverse)
+```
+```{r}
+source("prob.R")
+titanic <- read.csv("data/titanic.csv")
+
+unique(titanic$class)
+```
+#prob(survived|crew)
+```{r}
+unique(crew$class)
+
+crew <- titanic %>% 
+  filter(class == c("engineering crew", "victualling crew", "restaurant staff", "deck crew"))
+
+crew %>% 
+  filter(survived == "yes") %>% 
+  summarise(n() / nrow(crew))
+```
+#prob(survived|passender)
+```{r}
+unique(titanic$class)
+
+passengers <- titanic %>% 
+  filter(class == c("1st", "2nd", "3rd"))
+
+passengers %>% 
+  filter(survived == "yes") %>% 
+  summarise(n() / nrow(passengers))
+```
+#Q1.2.1
+```{r}
+rolldie(1) %>% 
+  filter(X1 < 5) %>% 
+  summarise(n() / nrow(rolldie(1))) #2/3
+```
+#Q1.2.2
+```{r}
+rolldie(3) %>% 
+  nrow() #6*6*6
+```
+
+#Q1.2.3
+```{r}
+four_dice <- rolldie(4)
+
+four_dice %>% 
+  mutate(total = X1 + X2 + X3 + X4) %>% 
+  filter(total == 5 | total == 6 | total == 7) %>% #34 results
+  summarise(n() / nrow(four_dice))
+```
+#Q1.2.4
+```{r}
+1/ (nrow(permutations(5, 5, repeats.allowed = FALSE))) # 1 / (5*4*3*2*1)
+```
+
+#Q1.2.5
+```{r}
+1 / (nrow(permutations(6, 6, repeats.allowed = TRUE))) #in order
+
+1 / (nrow(combinations(6, 6, repeats.allowed = TRUE))) #not in order
+```
+#Q1.2.6
+```{r}
+cards_no_jkr_black <- cards(52) %>% 
+  drop_na(suit) %>% 
+  filter(suit == "Spade"| suit == "Club")
+
+cards_no_jkr_black %>% 
+  filter(suit == "Spade") %>% 
+  summarise(n() / nrow(cards_no_jkr_black))
+```
+```{r}
+?if_else
+?filter
+```
+
+
