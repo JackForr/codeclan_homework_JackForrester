@@ -1,0 +1,82 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(janitor)
+```
+#Q1
+```{r}
+phones <- read_csv("data/20190928-items.csv") %>% 
+  clean_names()
+
+view(phones)
+glimpse(phones)
+
+skimr::skim(phones)
+```
+
+#Q2
+```{r}
+phones %>% 
+  group_by(brand) %>% 
+  summarise(total_phones = n()) %>% 
+  arrange(desc(total_phones)) %>% 
+  head(1)
+```
+#Q3
+```{r}
+samsung_stats <- phones %>% 
+  filter(brand == "Samsung") %>% 
+  summarise(
+    num_rating = n(),
+    mean_rating = mean(rating),
+    st_dev_rating = sd(rating)
+  )
+
+phones %>% 
+  filter(brand == "Samsung") %>% 
+  ggplot(aes(x = rating))+
+  geom_histogram(aes(y = ..density..))+
+  stat_function(
+    fun = ~dnorm(., mean = samsung_stats$mean_rating,
+                 sd = samsung_stats$st_dev_rating)
+  )
+```
+
+#Q4
+```{r}
+100*(pnorm(q=1) - pnorm(q = -1)) - 68%
+100*(pnorm(q=2) - pnorm(q = -2)) - 95%
+100*(pnorm(q=3) - pnorm(q = -3)) - 99%
+```
+```{r}
+phones_mutated <- phones %>% 
+  filter(brand == "Samsung") %>% 
+  mutate(
+    num_rating = n(),
+    mean_rating = mean(rating),
+    st_dev_rating = sd(rating))
+
+phones_mutated %>% 
+  filter(rating > mean_rating - st_dev_rating,
+         rating < mean_rating + st_dev_rating) %>% 
+  summarise(within_1_sd = n()/nrow(phones_mutated)) #within 1 sd
+
+phones_mutated %>% 
+  filter(rating > mean_rating - st_dev_rating*2,
+         rating < mean_rating + st_dev_rating*2) %>% 
+  summarise(within_1_sd = n()/nrow(phones_mutated)) #within 2 sd
+
+phones_mutated %>% 
+  filter(rating > mean_rating - st_dev_rating*3,
+         rating < mean_rating + st_dev_rating*3) %>% 
+  summarise(within_1_sd = n()/nrow(phones_mutated))#within 3 sd
+```
+
+```{r}
+?sd
+```
+
