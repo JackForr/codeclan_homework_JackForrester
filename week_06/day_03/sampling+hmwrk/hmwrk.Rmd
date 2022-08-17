@@ -1,0 +1,96 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(janitor)
+library(infer)
+
+house_sales <- read_csv("data_lab2/ames.csv") %>% 
+  clean_names()
+```
+#2
+```{r}
+house_sales %>% 
+  ggplot(aes(x = lot_area))+
+  geom_histogram()
+```
+distribution is too central to be a normal distribution
+
+#3
+```{r}
+bootstrap_mean_lot_area <- house_sales %>% 
+  rep_sample_n(size = 200,
+               reps = 5000,
+              replace = TRUE) %>% 
+  summarise(mean_lot_area = mean(lot_area))
+
+bootstrap_mean_lot_area %>% 
+  ggplot(aes(x = mean_lot_area))+
+  geom_histogram()
+```
+#4
+```{r}
+infer_lot_area <- house_sales %>% 
+  specify(response = lot_area) %>% 
+  generate(reps = 5000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+
+CI_95 <- infer_lot_area %>% 
+  get_ci(level = 0.95, type = "percentile")
+
+infer_lot_area %>% 
+  visualise(bins = 30)+
+  shade_ci(endpoints = CI_95)
+```
+#5
+```{r}
+CI_99 <- infer_lot_area %>% 
+  get_ci(level = 0.99, type = "percentile")
+
+infer_lot_area %>% 
+  visualise(bins = 30)+
+  shade_ci(endpoints = CI_99)
+```
+#6
+```{r}
+inferred_mean <- infer_lot_area %>% 
+  summarise(mean = mean(stat))
+```
+Estimate mean of the population at 10147.59 with a 95% confidence interval of [9876.449,	10445.97] & 99% confidence interval of [9799.695,	10551.81]
+
+#E1
+```{r}
+
+
+house_sales <- house_sales %>% 
+  mutate(year_built = as.factor(ifelse(year_built > 1920, "modern", "old")))
+
+bootstrap_resample_200 <- house_sales %>% # 5000 samples of 200 each with a proportion
+specify(response = year_built, success = "modern") %>% 
+  generate(reps = 5000, type = "bootstrap") %>% 
+  calculate(stat = "prop")
+
+year_built_ci <- bootstrap_resample_200 %>% 
+  get_confidence_interval(level = 0.95, type = "percentile")
+
+bootstrap_resample_200 %>%  
+  summarise(point_est = mean(stat))
+
+
+#with less reps makes difference between upper and lower bound in confidence interval bigger, different point estimate (less accurate??), ;arger standar error??
+
+bootstrap_resample_small <- house_sales %>% # 200 samples of 200 each with a proportion
+specify(response = year_built, success = "modern") %>% 
+  generate(reps = 200, type = "bootstrap") %>% 
+  calculate(stat = "prop")
+
+year_built_ci_small <- bootstrap_resample_small %>% 
+  get_confidence_interval(level = 0.95, type = "percentile")
+
+bootstrap_resample_small %>%  
+  summarise(point_est = mean(stat))
+
+```
+
