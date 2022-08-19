@@ -1,0 +1,138 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(infer)
+sleep <- msleep %>% 
+  janitor::clean_names()
+glimpse(sleep)
+```
+#Null: jaberwockies avg sleep IS NOT significantly different from the sample mean
+#Alternative: jaberwockies avg sleep IS significantly different from the sample mean
+#Alpha = 0.05
+```{r}
+null_distribution <- sleep %>% #distribution of sleep where mean = 7
+  specify(response = sleep_total) %>% 
+  hypothesise(null = "point", mu = 7.00) %>% 
+  generate(reps = 5000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+
+observed_stat <- sleep %>% #mean from original sample
+  summarise(mean_sleep = mean(sleep_total))
+
+null_distribution %>% 
+  visualise(bins = 30)+
+  shade_p_value(obs_stat = observed_stat, direction = "both")
+
+P_value <- null_distribution %>% #measure of how uncommon observed stat is if null hypothesis is true
+  get_p_value(obs_stat = observed_stat, direction = "both")
+```
+the mean of total sleep among the sample is significantly different from the 7 hours of Jabberwockies as p< 0.001 < alpha, therefore I reject null hypthesis in favour of alternative hypthesis 
+
+#Null: omnivores avg sleep IS NOT significantly longer than herbivores
+#Alternative: omnivores avg sleep IS significantly longer than herbivores
+#Alpha = 0.05
+```{r}
+
+sleep_vore <- sleep %>% 
+  filter(vore == "omni" | vore == "herbi")
+
+sleep_vore%>% 
+  group_by(vore) %>% 
+  ggplot(aes(x = vore, y = sleep_total))+
+  geom_boxplot()
+
+null_distribution <- sleep_vore %>% #distribution where omni sleep = herbi
+  specify(response = sleep_total, explanatory = vore) %>% 
+  hypothesise(null = "independence") %>% 
+  generate(reps = 5000, type = "permute") %>% 
+  calculate(stat = "diff in means", order = c("omni", "herbi")) #positive means omni sleep longer 
+
+observed_stat <- sleep_vore %>% 
+  specify(response = sleep_total, explanatory = vore) %>% 
+  calculate(stat = "diff in means", order = c("omni", "herbi")) #small positive 
+
+null_distribution %>% 
+  visualise()+
+  shade_p_value(obs_stat = observed_stat, direction = "left")
+  
+p_value <- null_distribution %>%
+  get_p_value(obs_stat = observed_stat, direction = "left")
+```
+Omnivores do not sleep for significanlty longer than herbivores as p = 0.8738, which is greater than alpha of 0.05, so I fail to reject null hypothesis
+
+#Null: proportion of domestic animals IS NOT significantly greater than 5%
+#Alternative: proportion of domestic animals IS significantly greater than 5%
+#Alpha = 0.05
+
+```{r}
+sleep <- sleep %>% 
+  mutate(domestication = as.factor(if_else(conservation == "domesticated", "domesticated", "non_domesticated"))) %>% 
+  mutate(domestication = coalesce(domestication, "non_domesticated"))
+
+null_distribution <- sleep %>% #distribtuion where null is true i.e. 5%
+  specify(response = domestication, success = "domesticated") %>% 
+  hypothesise(null = "point", p = 0.05) %>% 
+  generate(reps = 5000, type = "draw") %>% 
+  calculate(stat = "prop")
+
+observed_stat <- sleep %>% 
+  specify(response = domestication, success = "domesticated") %>%
+  calculate(stat = "prop") #12% in population are domesticated (Alternative?)
+
+null_distribution %>% 
+  visualise(bins = 15)+
+  shade_p_value(obs_stat = observed_stat, direction = "right")
+
+p_value <- null_distribution %>% 
+  get_p_value(obs_stat = observed_stat, direction = "right")
+```
+the proportion of domesticated animals is significantly greater than 5% as p = 0.0088, which is less than alpha of 0.05
+
+##Defining hypotheses
+
+#Q1
+- one sample, one tail proportional hypothesis test
+- draw
+$$
+H_0: \pi aware of shop = 0.4
+$$
+$$
+H_a: \pi aware of shop >0.4
+$$
+
+
+#Q2
+- two sample, one tail proportional hypthesis test
+-permute
+$$
+H_0: \pi A - \pi B = 0
+$$
+
+$$
+H_a: \pi A - \pi B =/= 0
+$$
+
+#Q3
+- one sample, two tail mean hypothesis test
+- bootstrap
+
+$$
+H_0: \mu width = 145mm
+$$
+$$
+H_a: \mu width =/= 145mm
+$$
+
+#Interpreting results
+
+#Q1
+fail to reject null hypthesis as p > significance level
+
+#Q2
+reject null hypthesis in favour of alternative as p < significance level
+
+#Q3
+fail to reject null hypothesis as p > significance level
