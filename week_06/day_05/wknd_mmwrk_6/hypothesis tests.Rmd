@@ -56,12 +56,12 @@ observed_stat <- sleep_vore %>%
 
 null_distribution %>% 
   visualise()+
-  shade_p_value(obs_stat = observed_stat, direction = "left")
+  shade_p_value(obs_stat = observed_stat, direction = "right")
   
 p_value <- null_distribution %>%
-  get_p_value(obs_stat = observed_stat, direction = "left")
+  get_p_value(obs_stat = observed_stat, direction = "right")
 ```
-Omnivores do not sleep for significanlty longer than herbivores as p = 0.8738, which is greater than alpha of 0.05, so I fail to reject null hypothesis
+Omnivores do not sleep for significanlty longer than herbivores as p = 0.1356, which is less than alpha of 0.05, so I fail to reject null hypothesis
 
 #Null: proportion of domestic animals IS NOT significantly greater than 5%
 #Alternative: proportion of domestic animals IS significantly greater than 5%
