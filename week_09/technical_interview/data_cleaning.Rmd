@@ -1,0 +1,47 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(tsibble)
+```
+###reading in data and cleaning names
+```{r}
+healthboards <- read_csv("raw_data/geography_codes_and_labels_hb2014_01042019.csv") %>% 
+  janitor::clean_names()
+
+healthboard_cancer <- read_csv("raw_data/3aef16b7-8af6-4ce0-a90b-8a29d6870014.csv") %>% 
+  janitor::clean_names()
+
+regional_cancer <- read_csv("raw_data/8cba0250-7e78-496d-8559-98c9c9a3d3e3.csv")%>% 
+  janitor::clean_names()
+```
+###extracting relevant data 
+```{r}
+borders_cancer <- regional_cancer %>%  #using incidences rather than rate as total number will affect provisions rather than rate
+  select(c(region, cancer_site, sex, year, incidences_all_ages), 
+         starts_with("incidences_age")) %>% 
+  filter(region == "South East of Scotland")
+
+write_csv(borders_cancer, "borders_cancer.csv")
+
+healthboards <- healthboards %>% 
+  select(c(hb, hb_name))
+
+healthboard_cancer <- healthboard_cancer %>% 
+  select(c(hb, cancer_site, sex, year, incidences_all_ages, crude_rate))
+```
+
+```{r}
+healthboard_cancer <- left_join(healthboard_cancer, healthboards, by = "hb")
+
+unique(healthboard_cancer$hb_name)
+
+healthboard_cancer <- healthboard_cancer %>% 
+  filter(hb_name == "NHS Borders")
+
+write_csv(healthboard_cancer, "healthboard_cancer.csv")
+```
+
