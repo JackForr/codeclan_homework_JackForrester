@@ -11,10 +11,11 @@ library(tsibble)
 library(fable)
 library(lubridate)
 library(urca)
+library(plotly)
 ```
 ```{r}
-read_csv("clean_data/borders_cancer.csv")
-read_csv("clean_data/healthboard_cancer.csv")
+borders_cancer <- read_csv("clean_data/borders_cancer.csv")
+healthboard_cancer <- read_csv("clean_data/healthboard_cancer.csv")
 ```
 ###most common cancer types 
 ```{r}
@@ -53,27 +54,77 @@ borders_cancer %>%
   geom_col()
 
 ```
-###cancer trend over time & forecast
+```{r}
+cancer_types_time <- borders_cancer %>% 
+  mutate(year = make_date(year),
+         year = year(year)) %>% 
+  filter(sex == "All", cancer_site != "All cancer types") %>% 
+  select(year, incidences_all_ages, cancer_site) %>% 
+  tsibble(index = year, key = c(cancer_site, incidences_all_ages)) %>% 
+  group_by(cancer_site) %>% 
+  summarise(incidences_all_ages = sum(incidences_all_ages)) 
+
+types <- cancer_types_time %>% 
+ggplot(aes(x = year,
+           y = incidences_all_ages, colour = cancer_site))+
+  geom_line()+
+  theme(legend.position = "none")
+```
+
+
+
+###cancer trend over time
 ```{r}
 borders_cancer_time <- borders_cancer %>% 
-  mutate(year = make_date(year)) %>% 
+  mutate(year = make_date(year),
+         year = year(year)) %>% 
   filter(sex == "All", cancer_site == "All cancer types") %>% 
   select(year, incidences_all_ages)
 
-borders_cancer_time <- as_tsibble(borders_cancer_time, index = year, key = incidences_all_ages)
+borders_cancer_time <- as_tsibble(borders_cancer_time, index = year)
 
 borders_cancer_time %>% 
-  ggplot(aes(x = year,
-             y = incidences_all_ages))+
-  geom_line()
+  autoplot(incidences_all_ages)
+```
+#forecast
+```{r}
+
 
 fit <- borders_cancer_time %>% 
-model(
-    snaive = SNAIVE(incidences_all_ages),
+model( #creating fitted model
+  naive = NAIVE(incidences_all_ages),
     mean_model = MEAN(incidences_all_ages),
     arima = ARIMA(incidences_all_ages)
   )
 
+forecast <- fit %>% 
+  forecast(h = 3) #forecast 3 years in advance 
 
+forecast %>% #plot forecasts
+  autoplot(borders_cancer_time)
+```
+#finding most accurate model
+```{r}
+years <- borders_cancer_time %>% #recorded years
+  distinct(year) %>% 
+  arrange(desc(year))
+
+train <- borders_cancer_time %>% 
+  filter_index("1996" ~ "2017")#training on data up to 2017
+
+fit_train <- train %>% 
+  model(
+    naive = NAIVE(incidences_all_ages),
+    mean_model = MEAN(incidences_all_ages),
+    arima = ARIMA(incidences_all_ages) #create fit
+  )
+
+forecast_test <- fit_train %>% 
+  fabletools::forecast(h =3) #test forecast
+
+forecast_test %>% 
+  autoplot(train, level = NULL)+
+  autolayer(filter_index(borders_cancer_time, "2017" ~ .), colour = "black")
+#models of similar accuracy, so keep both
 ```
 
