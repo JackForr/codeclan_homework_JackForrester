@@ -91,10 +91,10 @@ borders_cancer_time %>%
 
 
 fit <- borders_cancer_time %>% 
-model( #creating fitted model
-  naive = NAIVE(incidences_all_ages),
+  model( #creating fitted model
     mean_model = MEAN(incidences_all_ages),
-    arima = ARIMA(incidences_all_ages)
+    arima = ARIMA(incidences_all_ages),
+    arima000 = ARIMA(incidences_all_ages ~ pdq(0,0,0)) #non-seasonal fit
   )
 
 forecast <- fit %>% 
@@ -102,6 +102,8 @@ forecast <- fit %>%
 
 forecast %>% #plot forecasts
   autoplot(borders_cancer_time)
+
+?ARIMA
 ```
 #finding most accurate model
 ```{r}
@@ -114,9 +116,9 @@ train <- borders_cancer_time %>%
 
 fit_train <- train %>% 
   model(
-    naive = NAIVE(incidences_all_ages),
     mean_model = MEAN(incidences_all_ages),
-    arima = ARIMA(incidences_all_ages) #create fit
+    arima = ARIMA(incidences_all_ages),
+    arima000 = ARIMA(incidences_all_ages ~ pdq(0,0,0))#create fit
   )
 
 forecast_test <- fit_train %>% 
