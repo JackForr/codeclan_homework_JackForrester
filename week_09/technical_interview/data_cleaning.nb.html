@@ -1770,130 +1770,204 @@ pre code {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
-<pre class="r"><code>library(tidyverse)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUmVnaXN0ZXJlZCBTMyBtZXRob2RzIG92ZXJ3cml0dGVuIGJ5ICdkYnBseXInOlxuICBtZXRob2QgICAgICAgICBmcm9tXG4gIHByaW50LnRibF9sYXp5ICAgICBcbiAgcHJpbnQudGJsX3NxbCAgICAgIFxu4pSA4pSAIEF0dGFjaGluZyBwYWNrYWdlcyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAgdGlkeXZlcnNlIDEuMy4xIOKUgOKUgFxu4pyUIGdncGxvdDIgMy4zLjYgICAgIOKclCBwdXJyciAgIDAuMy40XG7inJQgdGliYmxlICAzLjEuNyAgICAg4pyUIGRwbHlyICAgMS4wLjlcbuKclCB0aWR5ciAgIDEuMi4wICAgICDinJQgc3RyaW5nciAxLjQuMFxu4pyUIHJlYWRyICAgMi4xLjIgICAgIOKclCBmb3JjYXRzIDAuNS4xXG7ilIDilIAgQ29uZmxpY3RzIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgCB0aWR5dmVyc2VfY29uZmxpY3RzKCkg4pSA4pSAXG7inJYgZHBseXI6OmZpbHRlcigpIG1hc2tzIHN0YXRzOjpmaWx0ZXIoKVxu4pyWIGRwbHlyOjpsYWcoKSAgICBtYXNrcyBzdGF0czo6bGFnKClcbiJ9 -->
-<pre><code>Registered S3 methods overwritten by &#39;dbplyr&#39;:
-  method         from
-  print.tbl_lazy     
-  print.tbl_sql      
-── Attaching packages ─────────────────────────────────────────── tidyverse 1.3.1 ──
-✔ ggplot2 3.3.6     ✔ purrr   0.3.4
-✔ tibble  3.1.7     ✔ dplyr   1.0.9
-✔ tidyr   1.2.0     ✔ stringr 1.4.0
-✔ readr   2.1.2     ✔ forcats 0.5.1
-── Conflicts ────────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShnZ3Bsb3QyKVxubGlicmFyeSh0c2liYmxlKVxuYGBgIn0= -->
-<pre class="r"><code>library(ggplot2)
-library(tsibble)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYdHNpYmJsZeKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6YmFzZeKAmTpcblxuICAgIGludGVyc2VjdCwgc2V0ZGlmZiwgdW5pb25cbiJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGBcbmBgYCJ9 -->
+<pre class="r"><code>```r
+library(tidyverse)</code></pre>
 <pre><code>
-Attaching package: ‘tsibble’
+&lt;!-- rnb-source-end --&gt;
 
-The following objects are masked from ‘package:base’:
+&lt;!-- rnb-output-begin eyJkYXRhIjoiUmVnaXN0ZXJlZCBTMyBtZXRob2RzIG92ZXJ3cml0dGVuIGJ5ICdkYnBseXInOlxuICBtZXRob2QgICAgICAgICBmcm9tXG4gIHByaW50LnRibF9sYXp5ICAgICBcbiAgcHJpbnQudGJsX3NxbCAgICAgIFxu4pSA4pSAIEF0dGFjaGluZyBwYWNrYWdlcyDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIAgdGlkeXZlcnNlIDEuMy4xIOKUgOKUgFxu4pyUIGdncGxvdDIgMy4zLjYgICAgIOKclCBwdXJyciAgIDAuMy40XG7inJQgdGliYmxlICAzLjEuNyAgICAg4pyUIGRwbHlyICAgMS4wLjlcbuKclCB0aWR5ciAgIDEuMi4wICAgICDinJQgc3RyaW5nciAxLjQuMFxu4pyUIHJlYWRyICAgMi4xLjIgICAgIOKclCBmb3JjYXRzIDAuNS4xXG7ilIDilIAgQ29uZmxpY3RzIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgCB0aWR5dmVyc2VfY29uZmxpY3RzKCkg4pSA4pSAXG7inJYgZHBseXI6OmZpbHRlcigpIG1hc2tzIHN0YXRzOjpmaWx0ZXIoKVxu4pyWIGRwbHlyOjpsYWcoKSAgICBtYXNrcyBzdGF0czo6bGFnKClcbiJ9 --&gt;
+</code></pre>
+<p>Registered S3 methods overwritten by ‘dbplyr’: method from
+print.tbl_lazy<br />
+print.tbl_sql<br />
+── Attaching packages ───────────────────────────────────────────
+tidyverse 1.3.1 ── ✔ ggplot2 3.3.6 ✔ purrr 0.3.4 ✔ tibble 3.1.7 ✔ dplyr
+1.0.9 ✔ tidyr 1.2.0 ✔ stringr 1.4.0 ✔ readr 2.1.2 ✔ forcats 0.5.1 ──
+Conflicts ──────────────────────────────────────────────
+tidyverse_conflicts() ── ✖ dplyr::filter() masks stats::filter() ✖
+dplyr::lag() masks stats::lag()</p>
+<pre><code>
 
-    intersect, setdiff, union</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>###reading in data and cleaning names</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGVhbHRoYm9hcmRzIDwtIHJlYWRfY3N2KFwicmF3X2RhdGEvZ2VvZ3JhcGh5X2NvZGVzX2FuZF9sYWJlbHNfaGIyMDE0XzAxMDQyMDE5LmNzdlwiKSAlPiUgXG4gIGphbml0b3I6OmNsZWFuX25hbWVzKClcbmBgYCJ9 -->
-<pre class="r"><code>healthboards &lt;- read_csv(&quot;raw_data/geography_codes_and_labels_hb2014_01042019.csv&quot;) %&gt;% 
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxubGlicmFyeShnZ3Bsb3QyKVxubGlicmFyeSh0c2liYmxlKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+library(ggplot2)
+library(tsibble)</code></pre>
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYdHNpYmJsZeKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6YmFzZeKAmTpcblxuICAgIGludGVyc2VjdCwgc2V0ZGlmZiwgdW5pb25cbiJ9 --&gt;
+</code></pre>
+<p>Attaching package: ‘tsibble’</p>
+<p>The following objects are masked from ‘package:base’:</p>
+<pre><code>intersect, setdiff, union</code></pre>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+###reading in data and cleaning names
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuaGVhbHRoYm9hcmRzIDwtIHJlYWRfY3N2KFxccmF3X2RhdGEvZ2VvZ3JhcGh5X2NvZGVzX2FuZF9sYWJlbHNfaGIyMDE0XzAxMDQyMDE5LmNzdlxcKSAlPiUgXG4gIGphbml0b3I6OmNsZWFuX25hbWVzKClcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+healthboards &lt;- read_csv(\raw_data/geography_codes_and_labels_hb2014_01042019.csv\) %&gt;% 
   janitor::clean_names()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTggQ29sdW1uczogNVxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgzKTogSEIsIEhCTmFtZSwgQ291bnRyeVxuZGJsICgyKTogSEJEYXRlRW5hY3RlZCwgSEJEYXRlQXJjaGl2ZWRcblxu4oS5IFVzZSBgc3BlYygpYCB0byByZXRyaWV2ZSB0aGUgZnVsbCBjb2x1bW4gc3BlY2lmaWNhdGlvbiBmb3IgdGhpcyBkYXRhLlxu4oS5IFNwZWNpZnkgdGhlIGNvbHVtbiB0eXBlcyBvciBzZXQgYHNob3dfY29sX3R5cGVzID0gRkFMU0VgIHRvIHF1aWV0IHRoaXMgbWVzc2FnZS5cbiJ9 -->
-<pre><code>Rows: 18 Columns: 5
-── Column specification ────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr (3): HB, HBName, Country
-dbl (2): HBDateEnacted, HBDateArchived
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGVhbHRoYm9hcmRfY2FuY2VyIDwtIHJlYWRfY3N2KFwicmF3X2RhdGEvM2FlZjE2YjctOGFmNi00Y2UwLWE5MGItOGEyOWQ2ODcwMDE0LmNzdlwiKSAlPiUgXG4gIGphbml0b3I6OmNsZWFuX25hbWVzKClcbmBgYCJ9 -->
-<pre class="r"><code>healthboard_cancer &lt;- read_csv(&quot;raw_data/3aef16b7-8af6-4ce0-a90b-8a29d6870014.csv&quot;) %&gt;% 
+&lt;!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTggQ29sdW1uczogNVxu4pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcXFxuIn0= --&gt;
+</code></pre>
+<p>Rows: 18 Columns: 5 ── Column specification
+────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuaGVhbHRoYm9hcmRfY2FuY2VyIDwtIHJlYWRfY3N2KFxccmF3X2RhdGEvM2FlZjE2YjctOGFmNi00Y2UwLWE5MGItOGEyOWQ2ODcwMDE0LmNzdlxcKSAlPiUgXG4gIGphbml0b3I6OmNsZWFuX25hbWVzKClcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+healthboard_cancer &lt;- read_csv(\raw_data/3aef16b7-8af6-4ce0-a90b-8a29d6870014.csv\) %&gt;% 
   janitor::clean_names()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDc2MDAgQ29sdW1uczogMjRcbuKUgOKUgCBDb2x1bW4gc3BlY2lmaWNhdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkRlbGltaXRlcjogXCIsXCJcbmNociAgKDkpOiBIQiwgQ2FuY2VyU2l0ZUlDRDEwQ29kZSwgQ2FuY2VyU2l0ZSwgU2V4LCBTZXhRRiwgRUFTUkxvd2VyOTVwY0NvbmZpZGVuLi4uXG5kYmwgKDE1KTogX2lkLCBZZWFyLCBJbmNpZGVuY2VzQWxsQWdlcywgQ3J1ZGVSYXRlLCBDcnVkZVJhdGVMb3dlcjk1cGNDb25maWRlbmNlSS4uLlxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 47600 Columns: 24
-── Column specification ────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr  (9): HB, CancerSiteICD10Code, CancerSite, Sex, SexQF, EASRLower95pcConfiden...
-dbl (15): _id, Year, IncidencesAllAges, CrudeRate, CrudeRateLower95pcConfidenceI...
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucmVnaW9uYWxfY2FuY2VyIDwtIHJlYWRfY3N2KFwicmF3X2RhdGEvOGNiYTAyNTAtN2U3OC00OTZkLTg1NTktOThjOWM5YTNkM2UzLmNzdlwiKSU+JSBcbiAgamFuaXRvcjo6Y2xlYW5fbmFtZXMoKVxuYGBgIn0= -->
-<pre class="r"><code>regional_cancer &lt;- read_csv(&quot;raw_data/8cba0250-7e78-496d-8559-98c9c9a3d3e3.csv&quot;)%&gt;% 
+&lt;!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDc2MDAgQ29sdW1uczogMjRcbuKUgOKUgCBDb2x1bW4gc3BlY2lmaWNhdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkRlbGltaXRlcjogXFxcbiJ9 --&gt;
+</code></pre>
+<p>Rows: 47600 Columns: 24 ── Column specification
+────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxucmVnaW9uYWxfY2FuY2VyIDwtIHJlYWRfY3N2KFxccmF3X2RhdGEvOGNiYTAyNTAtN2U3OC00OTZkLTg1NTktOThjOWM5YTNkM2UzLmNzdlxcKSU+JSBcbiAgamFuaXRvcjo6Y2xlYW5fbmFtZXMoKVxuYGBgXG5gYGAifQ== --&gt;
+
+```r
+```r
+regional_cancer &lt;- read_csv(\raw_data/8cba0250-7e78-496d-8559-98c9c9a3d3e3.csv\)%&gt;% 
   janitor::clean_names()</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTAyMDAgQ29sdW1uczogNjJcbuKUgOKUgCBDb2x1bW4gc3BlY2lmaWNhdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkRlbGltaXRlcjogXCIsXCJcbmNociAgKDkpOiBSZWdpb24sIENhbmNlclNpdGVJQ0QxMENvZGUsIENhbmNlclNpdGUsIFNleCwgU2V4UUYsIEVBU1JMb3dlcjk1cGNDb25mLi4uXG5kYmwgKDUzKTogX2lkLCBZZWFyLCBJbmNpZGVuY2VzQWdlVW5kZXI1LCBJbmNpZGVuY2VzQWdlNVRvOSwgSW5jaWRlbmNlc0FnZTEwVG8xNC4uLlxuXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
-<pre><code>Rows: 10200 Columns: 62
-── Column specification ────────────────────────────────────────────────────────────
-Delimiter: &quot;,&quot;
-chr  (9): Region, CancerSiteICD10Code, CancerSite, Sex, SexQF, EASRLower95pcConf...
-dbl (53): _id, Year, IncidencesAgeUnder5, IncidencesAge5To9, IncidencesAge10To14...
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>###extracting relevant data</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYm9yZGVyc19jYW5jZXIgPC0gcmVnaW9uYWxfY2FuY2VyICU+JSAgI3VzaW5nIGluY2lkZW5jZXMgcmF0aGVyIHRoYW4gcmF0ZSBhcyB0b3RhbCBudW1iZXIgd2lsbCBhZmZlY3QgcHJvdmlzaW9ucyByYXRoZXIgdGhhbiByYXRlXG4gIHNlbGVjdChjKHJlZ2lvbiwgY2FuY2VyX3NpdGUsIHNleCwgeWVhciwgaW5jaWRlbmNlc19hbGxfYWdlcyksIFxuICAgICAgICAgc3RhcnRzX3dpdGgoXCJpbmNpZGVuY2VzX2FnZVwiKSkgJT4lIFxuICBmaWx0ZXIocmVnaW9uID09IFwiU291dGggRWFzdCBvZiBTY290bGFuZFwiKVxuXG53cml0ZV9jc3YoYm9yZGVyc19jYW5jZXIsIFwiYm9yZGVyc19jYW5jZXIuY3N2XCIpXG5cbmhlYWx0aGJvYXJkcyA8LSBoZWFsdGhib2FyZHMgJT4lIFxuICBzZWxlY3QoYyhoYiwgaGJfbmFtZSkpXG5cbmhlYWx0aGJvYXJkX2NhbmNlciA8LSBoZWFsdGhib2FyZF9jYW5jZXIgJT4lIFxuICBzZWxlY3QoYyhoYiwgY2FuY2VyX3NpdGUsIHNleCwgeWVhciwgaW5jaWRlbmNlc19hbGxfYWdlcywgY3J1ZGVfcmF0ZSkpXG5gYGAifQ== -->
-<pre class="r"><code>borders_cancer &lt;- regional_cancer %&gt;%  #using incidences rather than rate as total number will affect provisions rather than rate
+&lt;!-- rnb-output-begin eyJkYXRhIjoiUm93czogMTAyMDAgQ29sdW1uczogNjJcbuKUgOKUgCBDb2x1bW4gc3BlY2lmaWNhdGlvbiDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIDilIBcbkRlbGltaXRlcjogXFxcbiJ9 --&gt;
+</code></pre>
+<p>Rows: 10200 Columns: 62 ── Column specification
+────────────────────────────────────────────────────────────
+Delimiter:<br />
+</p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+###extracting relevant data 
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuYm9yZGVyc19jYW5jZXIgPC0gcmVnaW9uYWxfY2FuY2VyICU+JSAgI3VzaW5nIGluY2lkZW5jZXMgcmF0aGVyIHRoYW4gcmF0ZSBhcyB0b3RhbCBudW1iZXIgd2lsbCBhZmZlY3QgcHJvdmlzaW9ucyByYXRoZXIgdGhhbiByYXRlXG4gIHNlbGVjdChjKHJlZ2lvbiwgY2FuY2VyX3NpdGUsIHNleCwgeWVhciwgaW5jaWRlbmNlc19hbGxfYWdlcyksIFxuICAgICAgICAgc3RhcnRzX3dpdGgoXFxpbmNpZGVuY2VzX2FnZVxcKSkgJT4lIFxuICBmaWx0ZXIocmVnaW9uID09IFxcU291dGggRWFzdCBvZiBTY290bGFuZFxcKVxuXG53cml0ZV9jc3YoYm9yZGVyc19jYW5jZXIsIFxcYm9yZGVyc19jYW5jZXIuY3N2XFwpXG5cbmhlYWx0aGJvYXJkcyA8LSBoZWFsdGhib2FyZHMgJT4lIFxuICBzZWxlY3QoYyhoYiwgaGJfbmFtZSkpXG5cbmhlYWx0aGJvYXJkX2NhbmNlciA8LSBoZWFsdGhib2FyZF9jYW5jZXIgJT4lIFxuICBzZWxlY3QoYyhoYiwgY2FuY2VyX3NpdGUsIHNleCwgeWVhciwgaW5jaWRlbmNlc19hbGxfYWdlcywgY3J1ZGVfcmF0ZSkpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+borders_cancer &lt;- regional_cancer %&gt;%  #using incidences rather than rate as total number will affect provisions rather than rate
   select(c(region, cancer_site, sex, year, incidences_all_ages), 
-         starts_with(&quot;incidences_age&quot;)) %&gt;% 
-  filter(region == &quot;South East of Scotland&quot;)
+         starts_with(\incidences_age\)) %&gt;% 
+  filter(region == \South East of Scotland\)
 
-write_csv(borders_cancer, &quot;borders_cancer.csv&quot;)
+write_csv(borders_cancer, \borders_cancer.csv\)
 
 healthboards &lt;- healthboards %&gt;% 
   select(c(hb, hb_name))
 
 healthboard_cancer &lt;- healthboard_cancer %&gt;% 
   select(c(hb, cancer_site, sex, year, incidences_all_ages, crude_rate))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGVhbHRoYm9hcmRfY2FuY2VyIDwtIGxlZnRfam9pbihoZWFsdGhib2FyZF9jYW5jZXIsIGhlYWx0aGJvYXJkcywgYnkgPSBcImhiXCIpXG5cbnVuaXF1ZShoZWFsdGhib2FyZF9jYW5jZXIkaGJfbmFtZSlcbmBgYCJ9 -->
-<pre class="r"><code>healthboard_cancer &lt;- left_join(healthboard_cancer, healthboards, by = &quot;hb&quot;)
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
+
+&lt;!-- rnb-chunk-end --&gt;
+
+
+&lt;!-- rnb-text-begin --&gt;
+
+
+
+&lt;!-- rnb-text-end --&gt;
+
+
+&lt;!-- rnb-chunk-begin --&gt;
+
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuaGVhbHRoYm9hcmRfY2FuY2VyIDwtIGxlZnRfam9pbihoZWFsdGhib2FyZF9jYW5jZXIsIGhlYWx0aGJvYXJkcywgYnkgPSBcXGhiXFwpXG5cbnVuaXF1ZShoZWFsdGhib2FyZF9jYW5jZXIkaGJfbmFtZSlcbmBgYFxuYGBgIn0= --&gt;
+
+```r
+```r
+healthboard_cancer &lt;- left_join(healthboard_cancer, healthboards, by = \hb\)
 
 unique(healthboard_cancer$hb_name)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBcIk5IUyBBeXJzaGlyZSBhbmQgQXJyYW5cIiAgICAgICAgXCJOSFMgQm9yZGVyc1wiICAgICAgICAgICAgICAgICAgXG4gWzNdIFwiTkhTIER1bWZyaWVzIGFuZCBHYWxsb3dheVwiICAgICBcIk5IUyBGaWZlXCIgICAgICAgICAgICAgICAgICAgICBcbiBbNV0gXCJOSFMgRm9ydGggVmFsbGV5XCIgICAgICAgICAgICAgIFwiTkhTIEdyYW1waWFuXCIgICAgICAgICAgICAgICAgIFxuIFs3XSBcIk5IUyBHcmVhdGVyIEdsYXNnb3cgYW5kIENseWRlXCIgXCJOSFMgSGlnaGxhbmRcIiAgICAgICAgICAgICAgICAgXG4gWzldIFwiTkhTIExhbmFya3NoaXJlXCIgICAgICAgICAgICAgICBcIk5IUyBMb3RoaWFuXCIgICAgICAgICAgICAgICAgICBcblsxMV0gXCJOSFMgT3JrbmV5XCIgICAgICAgICAgICAgICAgICAgIFwiTkhTIFNoZXRsYW5kXCIgICAgICAgICAgICAgICAgIFxuWzEzXSBcIk5IUyBUYXlzaWRlXCIgICAgICAgICAgICAgICAgICAgXCJOSFMgV2VzdGVybiBJc2xlc1wiICAgICAgICAgICAgXG4ifQ== -->
-<pre><code> [1] &quot;NHS Ayrshire and Arran&quot;        &quot;NHS Borders&quot;                  
- [3] &quot;NHS Dumfries and Galloway&quot;     &quot;NHS Fife&quot;                     
- [5] &quot;NHS Forth Valley&quot;              &quot;NHS Grampian&quot;                 
- [7] &quot;NHS Greater Glasgow and Clyde&quot; &quot;NHS Highland&quot;                 
- [9] &quot;NHS Lanarkshire&quot;               &quot;NHS Lothian&quot;                  
-[11] &quot;NHS Orkney&quot;                    &quot;NHS Shetland&quot;                 
-[13] &quot;NHS Tayside&quot;                   &quot;NHS Western Isles&quot;            </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuaGVhbHRoYm9hcmRfY2FuY2VyIDwtIGhlYWx0aGJvYXJkX2NhbmNlciAlPiUgXG4gIGZpbHRlcihoYl9uYW1lID09IFwiTkhTIEJvcmRlcnNcIilcblxud3JpdGVfY3N2KGhlYWx0aGJvYXJkX2NhbmNlciwgXCJoZWFsdGhib2FyZF9jYW5jZXIuY3N2XCIpXG5gYGAifQ== -->
-<pre class="r"><code>healthboard_cancer &lt;- healthboard_cancer %&gt;% 
-  filter(hb_name == &quot;NHS Borders&quot;)
+<pre><code>
+&lt;!-- rnb-source-end --&gt;
 
-write_csv(healthboard_cancer, &quot;healthboard_cancer.csv&quot;)</code></pre>
+&lt;!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBcXE5IUyBBeXJzaGlyZSBhbmQgQXJyYW5cXCAgICAgICAgXFxOSFMgQm9yZGVyc1xcICAgICAgICAgICAgICAgICAgXG4gWzNdIFxcTkhTIER1bWZyaWVzIGFuZCBHYWxsb3dheVxcICAgICBcXE5IUyBGaWZlXFwgICAgICAgICAgICAgICAgICAgICBcbiBbNV0gXFxOSFMgRm9ydGggVmFsbGV5XFwgICAgICAgICAgICAgIFxcTkhTIEdyYW1waWFuXFwgICAgICAgICAgICAgICAgIFxuIFs3XSBcXE5IUyBHcmVhdGVyIEdsYXNnb3cgYW5kIENseWRlXFwgXFxOSFMgSGlnaGxhbmRcXCAgICAgICAgICAgICAgICAgXG4gWzldIFxcTkhTIExhbmFya3NoaXJlXFwgICAgICAgICAgICAgICBcXE5IUyBMb3RoaWFuXFwgICAgICAgICAgICAgICAgICBcblsxMV0gXFxOSFMgT3JrbmV5XFwgICAgICAgICAgICAgICAgICAgIFxcTkhTIFNoZXRsYW5kXFwgICAgICAgICAgICAgICAgIFxuWzEzXSBcXE5IUyBUYXlzaWRlXFwgICAgICAgICAgICAgICAgICAgXFxOSFMgV2VzdGVybiBJc2xlc1xcICAgICAgICAgICAgXG4ifQ== --&gt;
+</code></pre>
+<p>[1] Ayrshire and Arran  Borders <br />
+[3] Dumfries and Galloway  Fife <br />
+[5] Forth Valley  Grampian <br />
+[7] Greater Glasgow and Clyde Highland <br />
+[9] Lanarkshire  Lothian <br />
+[11] Orkney  Shetland <br />
+[13] Tayside  Western Isles </p>
+<pre><code>
+
+
+&lt;!-- rnb-output-end --&gt;
+
+&lt;!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYGBgclxuaGVhbHRoYm9hcmRfY2FuY2VyIDwtIGhlYWx0aGJvYXJkX2NhbmNlciAlPiUgXG4gIGZpbHRlcihoYl9uYW1lID09IFxcTkhTIEJvcmRlcnNcXClcblxud3JpdGVfY3N2KGhlYWx0aGJvYXJkX2NhbmNlciwgXFxoZWFsdGhib2FyZF9jYW5jZXIuY3N2XFwpXG5gYGBcbmBgYCJ9 --&gt;
+
+```r
+```r
+healthboard_cancer &lt;- healthboard_cancer %&gt;% 
+  filter(hb_name == \NHS Borders\)
+
+write_csv(healthboard_cancer, \healthboard_cancer.csv\)</code></pre>
+<p>```</p>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeSh0c2liYmxlKQpgYGAKIyMjcmVhZGluZyBpbiBkYXRhIGFuZCBjbGVhbmluZyBuYW1lcwpgYGB7cn0KaGVhbHRoYm9hcmRzIDwtIHJlYWRfY3N2KCJyYXdfZGF0YS9nZW9ncmFwaHlfY29kZXNfYW5kX2xhYmVsc19oYjIwMTRfMDEwNDIwMTkuY3N2IikgJT4lIAogIGphbml0b3I6OmNsZWFuX25hbWVzKCkKCmhlYWx0aGJvYXJkX2NhbmNlciA8LSByZWFkX2NzdigicmF3X2RhdGEvM2FlZjE2YjctOGFmNi00Y2UwLWE5MGItOGEyOWQ2ODcwMDE0LmNzdiIpICU+JSAKICBqYW5pdG9yOjpjbGVhbl9uYW1lcygpCgpyZWdpb25hbF9jYW5jZXIgPC0gcmVhZF9jc3YoInJhd19kYXRhLzhjYmEwMjUwLTdlNzgtNDk2ZC04NTU5LTk4YzljOWEzZDNlMy5jc3YiKSU+JSAKICBqYW5pdG9yOjpjbGVhbl9uYW1lcygpCmBgYAojIyNleHRyYWN0aW5nIHJlbGV2YW50IGRhdGEgCmBgYHtyfQpib3JkZXJzX2NhbmNlciA8LSByZWdpb25hbF9jYW5jZXIgJT4lICAjdXNpbmcgaW5jaWRlbmNlcyByYXRoZXIgdGhhbiByYXRlIGFzIHRvdGFsIG51bWJlciB3aWxsIGFmZmVjdCBwcm92aXNpb25zIHJhdGhlciB0aGFuIHJhdGUKICBzZWxlY3QoYyhyZWdpb24sIGNhbmNlcl9zaXRlLCBzZXgsIHllYXIsIGluY2lkZW5jZXNfYWxsX2FnZXMpLCAKICAgICAgICAgc3RhcnRzX3dpdGgoImluY2lkZW5jZXNfYWdlIikpICU+JSAKICBmaWx0ZXIocmVnaW9uID09ICJTb3V0aCBFYXN0IG9mIFNjb3RsYW5kIikKCndyaXRlX2Nzdihib3JkZXJzX2NhbmNlciwgImJvcmRlcnNfY2FuY2VyLmNzdiIpCgpoZWFsdGhib2FyZHMgPC0gaGVhbHRoYm9hcmRzICU+JSAKICBzZWxlY3QoYyhoYiwgaGJfbmFtZSkpCgpoZWFsdGhib2FyZF9jYW5jZXIgPC0gaGVhbHRoYm9hcmRfY2FuY2VyICU+JSAKICBzZWxlY3QoYyhoYiwgY2FuY2VyX3NpdGUsIHNleCwgeWVhciwgaW5jaWRlbmNlc19hbGxfYWdlcywgY3J1ZGVfcmF0ZSkpCmBgYAoKYGBge3J9CmhlYWx0aGJvYXJkX2NhbmNlciA8LSBsZWZ0X2pvaW4oaGVhbHRoYm9hcmRfY2FuY2VyLCBoZWFsdGhib2FyZHMsIGJ5ID0gImhiIikKCnVuaXF1ZShoZWFsdGhib2FyZF9jYW5jZXIkaGJfbmFtZSkKCmhlYWx0aGJvYXJkX2NhbmNlciA8LSBoZWFsdGhib2FyZF9jYW5jZXIgJT4lIAogIGZpbHRlcihoYl9uYW1lID09ICJOSFMgQm9yZGVycyIpCgp3cml0ZV9jc3YoaGVhbHRoYm9hcmRfY2FuY2VyLCAiaGVhbHRoYm9hcmRfY2FuY2VyLmNzdiIpCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeSh0c2liYmxlKQpgYGAKIyMjcmVhZGluZyBpbiBkYXRhIGFuZCBjbGVhbmluZyBuYW1lcwpgYGB7cn0KaGVhbHRoYm9hcmRzIDwtIHJlYWRfY3N2KCJyYXdfZGF0YS9nZW9ncmFwaHlfY29kZXNfYW5kX2xhYmVsc19oYjIwMTRfMDEwNDIwMTkuY3N2IikgJT4lIAogIGphbml0b3I6OmNsZWFuX25hbWVzKCkKCmhlYWx0aGJvYXJkX2NhbmNlciA8LSByZWFkX2NzdigicmF3X2RhdGEvM2FlZjE2YjctOGFmNi00Y2UwLWE5MGItOGEyOWQ2ODcwMDE0LmNzdiIpICU+JSAKICBqYW5pdG9yOjpjbGVhbl9uYW1lcygpCgpyZWdpb25hbF9jYW5jZXIgPC0gcmVhZF9jc3YoInJhd19kYXRhLzhjYmEwMjUwLTdlNzgtNDk2ZC04NTU5LTk4YzljOWEzZDNlMy5jc3YiKSU+JSAKICBqYW5pdG9yOjpjbGVhbl9uYW1lcygpCmBgYAojIyNleHRyYWN0aW5nIHJlbGV2YW50IGRhdGEgCmBgYHtyfQpib3JkZXJzX2NhbmNlciA8LSByZWdpb25hbF9jYW5jZXIgJT4lICAjdXNpbmcgaW5jaWRlbmNlcyByYXRoZXIgdGhhbiByYXRlIGFzIHRvdGFsIG51bWJlciB3aWxsIGFmZmVjdCBwcm92aXNpb25zIHJhdGhlciB0aGFuIHJhdGUKICBzZWxlY3QoYyhyZWdpb24sIGNhbmNlcl9zaXRlLCBzZXgsIHllYXIsIGluY2lkZW5jZXNfYWxsX2FnZXMpLCAKICAgICAgICAgc3RhcnRzX3dpdGgoImluY2lkZW5jZXNfYWdlIikpICU+JSAKICBmaWx0ZXIocmVnaW9uID09ICJTb3V0aCBFYXN0IG9mIFNjb3RsYW5kIikgI2ZpbHRlciBmcm8gYm9yZGVycyBhcmVhCgp3cml0ZV9jc3YoYm9yZGVyc19jYW5jZXIsICJib3JkZXJzX2NhbmNlci5jc3YiKQoKaGVhbHRoYm9hcmRzIDwtIGhlYWx0aGJvYXJkcyAlPiUgCiAgc2VsZWN0KGMoaGIsIGhiX25hbWUpKQoKaGVhbHRoYm9hcmRfY2FuY2VyIDwtIGhlYWx0aGJvYXJkX2NhbmNlciAlPiUgCiAgc2VsZWN0KGMoaGIsIGNhbmNlcl9zaXRlLCBzZXgsIHllYXIsIGluY2lkZW5jZXNfYWxsX2FnZXMsIGNydWRlX3JhdGUpKQpgYGAKCmBgYHtyfQpoZWFsdGhib2FyZF9jYW5jZXIgPC0gbGVmdF9qb2luKGhlYWx0aGJvYXJkX2NhbmNlciwgaGVhbHRoYm9hcmRzLCBieSA9ICJoYiIpICMgam9pbiB0byBoYXZlIGFzc29jaWF0ZWQgaGVhbHRoYm9hcmRzCgp1bmlxdWUoaGVhbHRoYm9hcmRfY2FuY2VyJGhiX25hbWUpCgpoZWFsdGhib2FyZF9jYW5jZXIgPC0gaGVhbHRoYm9hcmRfY2FuY2VyICU+JSAKICBmaWx0ZXIoaGJfbmFtZSA9PSAiTkhTIEJvcmRlcnMiKQoKd3JpdGVfY3N2KGhlYWx0aGJvYXJkX2NhbmNlciwgImhlYWx0aGJvYXJkX2NhbmNlci5jc3YiKQpgYGAKCg==</div>
 
 
 

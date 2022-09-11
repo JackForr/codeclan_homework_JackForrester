@@ -11,36 +11,52 @@ library(tsibble)
 library(fable)
 library(lubridate)
 library(urca)
-library(plotly)
+library(here)
 ```
 ```{r}
-borders_cancer <- read_csv("clean_data/borders_cancer.csv")
-healthboard_cancer <- read_csv("clean_data/healthboard_cancer.csv")
+borders_cancer <- read_csv(here("clean_data/borders_cancer.csv"))
+healthboard_cancer <- read_csv(here("clean_data/healthboard_cancer.csv"))
 ```
 ###most common cancer types 
 ```{r}
 ten_cancers <- borders_cancer %>% 
   group_by(cancer_site) %>% 
   filter(cancer_site != "All cancer types") %>% 
-  summarise(total = sum(incidences_all_ages)) %>% 
+  summarise(proportion = round((sum(incidences_all_ages) / 406406)*100),1) %>% #make reproducible
+  arrange(desc(proportion)) %>% 
   head(10) %>% 
-  mutate(cancer_site = recode(cancer_site,
-                              "Acute lymphoblastic leukaemia" = "Leukemia",
-                              "Acute myeloid leukaemia" = "Leukemia",
-                              "All brain and CNS tumours (malignant and non-malignant)" = "Brain",
+  mutate(cancer_site = recode(cancer_site, #grouping sub-types 
                               "Basal cell carcinoma of the skin" = "Skin",
-                              "Bone and articular cartilage" = "Bone",
-                              "Bone and connective tissue" = "Bone",
-                              "Carcinoma in situ of the breast" = "Carcinoma",
-                              "Carcinoma in situ of the cervix uteri" = "Carcinoma"))
+                              "Non-melanoma skin cancer" = "Skin",
+                              "Squamous cell carcinoma of the skin" = "Skin",
+                              "Trachea, bronchus and lung" = "Lung",
+                              "Colorectal cancer" = "Colorectal",
+                              "Carcinoma in situ of the breast" = "Breast",
+                              "Carcinoma in situ of the cervix uteri" = "Cervix"))
 
 ten_cancers %>% 
-  ggplot(aes(x = cancer_site, y = total))+
-  geom_col()
+  ggplot(aes(x = cancer_site, y = proportion))+
+  geom_col()+
+  labs(title = "Most frequent cancer sites in the Borders",
+       x = "Cancer site",
+       y = "Percentage of all observations")+
+  theme(panel.background = element_blank())
 ```
-###distribution of cancer by age
 ```{r}
 borders_cancer %>% 
+  group_by(cancer_site) %>% 
+  filter(cancer_site != "All cancer types") %>% 
+  summarise(proportion = (sum(incidences_all_ages) / 406406)*100,
+            total = (sum(incidences_all_ages))) %>%
+  arrange(desc(proportion))
+```
+
+
+Shows the highest occurring cancer sites observed in the borders as proportions. Chose to display this as provisioning equipment will need to be tailored to the occurance of different cancer types. I chose to display this in proportional terms as it is more useful when deciding to allocate budget to provisions specific to cancer types i.e. 23% budget to breast specific
+
+###distribution of cancer by age
+```{r}
+borders_cancer_age <- borders_cancer %>% 
   summarise(across(starts_with("incidences_age"), sum)) %>% 
   pivot_longer(cols = everything(), 
                names_to = "age_bracket",
@@ -48,30 +64,21 @@ borders_cancer %>%
   mutate(age_bracket = str_remove_all(age_bracket, "[a-z]{10}_[a-z]{3}"),
          age_bracket = str_replace_all(age_bracket, "to", "-"),
          age_bracket = str_replace_all(age_bracket, "_under", "-"),
-         age_bracket = str_replace_all(age_bracket, "and_over", "+")) %>% 
+         age_bracket = str_replace_all(age_bracket, "and_over", "+"))
+
+borders_cancer_age <- borders_cancer_age %>% 
+  mutate(age_bracket = factor(age_bracket, levels = unique(borders_cancer_age$age_bracket)))
+
+borders_cancer_age %>% 
   ggplot(aes(x = age_bracket,
              y = incidences_of_cancer))+
-  geom_col()
+  geom_col()+
+  labs(title = "Age distribution of cancer in the Borders",
+       x = "Age bracket",
+       y = "Incidence of cancer")+
+  theme(panel.background = element_blank())
 
 ```
-```{r}
-cancer_types_time <- borders_cancer %>% 
-  mutate(year = make_date(year),
-         year = year(year)) %>% 
-  filter(sex == "All", cancer_site != "All cancer types") %>% 
-  select(year, incidences_all_ages, cancer_site) %>% 
-  tsibble(index = year, key = c(cancer_site, incidences_all_ages)) %>% 
-  group_by(cancer_site) %>% 
-  summarise(incidences_all_ages = sum(incidences_all_ages)) 
-
-types <- cancer_types_time %>% 
-ggplot(aes(x = year,
-           y = incidences_all_ages, colour = cancer_site))+
-  geom_line()+
-  theme(legend.position = "none")
-```
-
-
 
 ###cancer trend over time
 ```{r}
@@ -84,7 +91,11 @@ borders_cancer_time <- borders_cancer %>%
 borders_cancer_time <- as_tsibble(borders_cancer_time, index = year)
 
 borders_cancer_time %>% 
-  autoplot(incidences_all_ages)
+  autoplot(incidences_all_ages)+
+  labs(title = "Incidence of cancer in the Borders",
+       x = "Year",
+       y = "Incidence of cancer")+
+  theme(panel.background = element_blank())
 ```
 #forecast
 ```{r}
@@ -102,8 +113,6 @@ forecast <- fit %>%
 
 forecast %>% #plot forecasts
   autoplot(borders_cancer_time)
-
-?ARIMA
 ```
 #finding most accurate model
 ```{r}

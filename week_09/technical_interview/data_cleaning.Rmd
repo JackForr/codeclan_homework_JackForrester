@@ -23,7 +23,7 @@ regional_cancer <- read_csv("raw_data/8cba0250-7e78-496d-8559-98c9c9a3d3e3.csv")
 borders_cancer <- regional_cancer %>%  #using incidences rather than rate as total number will affect provisions rather than rate
   select(c(region, cancer_site, sex, year, incidences_all_ages), 
          starts_with("incidences_age")) %>% 
-  filter(region == "South East of Scotland")
+  filter(region == "South East of Scotland") #filter fro borders area
 
 write_csv(borders_cancer, "borders_cancer.csv")
 
@@ -35,7 +35,7 @@ healthboard_cancer <- healthboard_cancer %>%
 ```
 
 ```{r}
-healthboard_cancer <- left_join(healthboard_cancer, healthboards, by = "hb")
+healthboard_cancer <- left_join(healthboard_cancer, healthboards, by = "hb") # join to have associated healthboards
 
 unique(healthboard_cancer$hb_name)
 
