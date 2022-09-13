@@ -1,0 +1,103 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(janitor)
+library(GGally)
+library(fastDummies)
+library(ggfortify)
+```
+###1
+```{r}
+housing_prices <- read_csv("data/housing_prices.csv") 
+```
+```{r}
+head(housing_prices)
+```
+###2
+```{r}
+ggpairs(housing_prices, columns = 4:5)
+```
+correlation of 0.934 i.e very strong positive
+
+###3
+```{r}
+housing_prices <- housing_prices %>% 
+  select(-total_bedrooms)
+
+#what about populations and households??
+```
+###4
+```{r}
+housing_prices %>% 
+  ggpairs()
+
+housing_prices %>% 
+  ggplot(aes(x = median_income,
+             y = median_house_value))+
+  geom_point()
+
+housing_prices %>% 
+  ggplot(aes(x = ocean_proximity,
+             y = median_house_value))+
+  geom_boxplot()
+```
+###5
+```{r}
+housing_prices <- housing_prices %>% 
+  dummy_cols(select_columns = "ocean_proximity", remove_first_dummy = TRUE, remove_selected_columns = TRUE) #1H ocean is dummy variable
+```
+
+###6
+```{r}
+model_value_income <- lm(median_house_value ~ median_income, housing_prices)
+
+summary(model_value_income)
+
+autoplot(model_value_income)
+```
+median house value = 39987*median_income + 45457
+effect of income on house value is statistically significant
+my model with median income explains 41.29% of the changes in house value
+for each 1 unit increase in income, house price increases by 39987
+
+###7
+```{r}
+model_value_income_bay <- lm(median_house_value ~ median_income + `ocean_proximity_NEAR BAY`, housing_prices)
+
+summary(model_value_income_bay)
+
+autoplot(model_value_income_bay)
+```
+the median house value with an owner of income 8 by the bay will be worth: 399064
+
+median_house_value = (39611.7*median_income) + (39611.7*ocean_proximity_NEAR BAY) + 42558.7
+
+```{r}
+39611.7*8 + 39611.7 + 42558.7
+```
+
+###8
+```{r}
+housing_prices <- housing_prices %>% 
+  mutate(across(ocean_proximity_INLAND:`ocean_proximity_NEAR OCEAN`, as.logical))
+
+model_inter <- lm(median_house_value ~ median_income + `ocean_proximity_NEAR BAY` + median_income:`ocean_proximity_NEAR BAY`, housing_prices)
+
+summary(model_inter)
+
+autoplot(model_inter)
+```
+interaction is not statistically justifed based on high p value
+###9
+```{r}
+housing_prices %>%   
+ggplot(aes(x = log(median_income),
+             y = median_house_value, colour = `ocean_proximity_NEAR BAY`))+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE)
+
+```
+
