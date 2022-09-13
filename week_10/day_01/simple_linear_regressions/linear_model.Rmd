@@ -1,0 +1,49 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(modelr)
+library(infer)
+library(ggfortify)
+```
+###MVP
+```{r}
+project <- read_csv("data/project_management.csv") %>% 
+  janitor::clean_names()
+```
+```{r}
+project %>% 
+ggplot(aes(x = estimated_length,
+           y = actual_length))+
+  geom_point()
+```
+```{r}
+project %>% 
+  summarise(r = cor(estimated_length, actual_length))
+```
+there's a very strong positive correlation between estimated length and actual length
+
+```{r}
+model <- lm(formula = actual_length ~ estimated_length,
+            data = project)
+```
+for an increase 1 estimated length, actual length will increase by 1.223
+$$
+actuallength = 1.223*estimatedlength + 1.416
+$$
+```{r}
+project <- project %>% 
+  add_predictions(model)
+
+summary(model)
+
+autoplot(model)
+
+project %>% 
+  ggplot(aes(x = estimated_length))+
+  geom_point(aes(y = actual_length))+
+  geom_line(aes(y = pred))
+```
+p_value of estimated length is statistically significant & can be trusted based on the diagnostic plots
