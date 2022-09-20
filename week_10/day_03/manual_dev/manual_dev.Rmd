@@ -1,0 +1,255 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(modelr)
+library(skimr)
+library(GGally)
+library(ggfortify)
+```
+###cleaning for regression
+```{r}
+kc_houses <- read_csv("data/kc_house_data.csv")
+```
+```{r}
+kc_houses <- kc_houses %>%
+  select(-c(zipcode, date, id)) %>% 
+  mutate(waterfront = as.logical(waterfront), 
+  yr_renovated = if_else(yr_renovated > 0, TRUE, FALSE),
+  view = as.factor(view),
+  condition = as.factor(condition),
+  grade = as.factor(grade))
+```
+###removing aliases
+```{r}
+alias(lm(price ~ ., data = kc_houses))
+
+kc_houses <- kc_houses %>% 
+  select(-c(sqft_basement, sqft_above)) 
+```
+
+###choosing first predictor for model
+```{r}
+kc_houses_numeric <-  kc_houses %>% 
+  select_if(is.numeric)
+
+kc_houses_non <- kc_houses %>% 
+  select_if(function(x) !is.numeric(x))
+
+kc_houses_non$price <- kc_houses$price
+
+ggpairs(kc_houses_numeric)
+ggsave("numeric.png", width = 20, height = 20)
+ggpairs(kc_houses_non)
+ggsave("nonnumeric.png")
+```
+waterfront, view and grade have potential
+sqft_living, sqft_living15, bathrooms, bedrooms, lat
+
+```{r}
+model1a <- lm(price ~ sqft_living,
+              data = kc_houses)
+
+autoplot(model1a)
+
+summary(model1a) #violates normal distribution and scale location
+```
+```{r}
+kc_houses <- kc_houses %>% 
+  mutate(ln_sqft_living = log(sqft_living))
+
+model1b <- lm(price ~ ln_sqft_living,
+              data = kc_houses)
+
+autoplot(model1b)
+
+summary(model1b)
+```
+reject sqft_living and ln_sqft_living based on diagnostic plots
+
+```{r}
+model1c <- lm(price ~ sqft_living15,
+              data = kc_houses)
+
+autoplot(model1c)
+
+summary(model1c)
+```
+```{r}
+kc_houses <- kc_houses %>% 
+  mutate(ln_sqft_living15 = log(sqft_living15))
+
+model1d <- lm(price ~ ln_sqft_living15,
+              data = kc_houses)
+
+autoplot(model1d)
+
+summary(model1d)
+```
+```{r}
+model1e <- lm(price ~ bathrooms,
+              data = kc_houses)
+
+autoplot(model1e)
+
+summary(model1e)
+```
+```{r}
+
+kc_houses <- kc_houses %>% 
+  mutate(ln_bathrooms = log(1 + bathrooms))
+
+model1f <- lm(price ~ ln_bathrooms,
+              data = kc_houses)
+
+autoplot(model1f)
+
+summary(model1f)
+
+```
+waterfront, view and grade have potential
+```{r}
+model1g <- lm(price ~ grade,
+              data = kc_houses)
+
+autoplot(model1g)
+
+summary(model1g)
+```
+```{r}
+model1h <- lm(price ~ view,
+              data = kc_houses)
+
+autoplot(model1h)
+
+summary(model1h)
+```
+model1b has the highest r^2 and the least horiffic diagnostic plots
+
+###second predicotr to explain residuals
+```{r}
+price_resid <- kc_houses %>% 
+  add_residuals(model1b) %>% 
+  select(-c(price, grade))
+
+price_resid %>% 
+  ggpairs()
+
+ggsave("resid.png", height = 20, width = 20)
+```
+latitude
+
+```{r}
+model2a <- lm(price ~ ln_sqft_living + lat,
+              data = kc_houses)
+
+autoplot(model2a)
+
+summary(model2a)
+```
+
+```{r}
+model2b <- lm(price ~ ln_sqft_living + grade,
+              data = kc_houses)
+
+autoplot(model2b)
+
+summary(model2b)
+```
+```{r}
+anova(model1b, model2b)
+```
+include all levels in our model due to statistical significance
+2b is champ!!
+
+###third predictor
+```{r}
+price_resid <- kc_houses %>% 
+  add_residuals(model2b) %>% 
+  select(-c(price, ln_sqft_living, grade))
+
+price_resid %>% 
+  ggpairs()
+
+ggsave("resid2.png", height = 20, width = 20)
+```
+latitude?
+
+```{r}
+model3a <- lm(price ~ ln_sqft_living + grade + lat,
+              data = kc_houses)
+
+summary(model3a)
+
+autoplot(model3a)
+```
+
+###add interaction
+```{r}
+price_resid <- kc_houses %>% 
+  add_residuals(model3a) %>% 
+  select(-price)
+```
+```{r}
+coplot(resid ~ ln_sqft_living | lat,
+        panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = price_resid,
+       rows = 1)
+```
+latitude and ln_sqft_living not worth plotting
+
+ln_sqft_living + grade + lat
+
+```{r}
+price_resid %>% 
+  ggplot(aes(x = lat, y = resid, colour = grade))+
+  geom_point(alpha = 0.1)+
+  geom_smooth(method = "lm", se = FALSE)
+```
+lat:grade has potential
+
+```{r}
+price_resid %>% 
+  ggplot(aes(x = ln_sqft_living, y = resid, colour = grade))+
+  geom_point(alpha = 0.1)+
+  geom_smooth(method = "lm", se = FALSE)
+```
+best one yet ln_sqft_living:grade
+
+```{r}
+model4a <- lm(price ~ ln_sqft_living + grade + lat +
+                ln_sqft_living:grade,
+              data = kc_houses)
+
+summary(model4a)
+
+autoplot(model4a)
+```
+
+```{r}
+model4b <- lm(price ~ ln_sqft_living + grade + lat +
+                lat:grade,
+              data = kc_houses)
+
+summary(model4b)
+```
+model4a best
+
+```{r}
+anova(model3a, model4a)
+```
+include as significant at all levels
+
+###relative importance of variables
+```{r}
+relaimpo::calc.relimp(model4a, type = "lmg", rela = TRUE)
+```
+
+
+
+

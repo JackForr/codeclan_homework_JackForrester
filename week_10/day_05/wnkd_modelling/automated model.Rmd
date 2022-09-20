@@ -1,0 +1,11 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+avocados_forward <- regsubsets(average_price ~ ., avocados, nvmax = 11, method = "forward")
+
+summary_avocados_forward <- summary(avocados_forward)
+```
+
+ 

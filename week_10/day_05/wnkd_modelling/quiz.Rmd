@@ -1,0 +1,41 @@
+---
+title: "quiz"
+output: html_document
+date: '2022-09-19'
+---
+
+
+###1 I want to predict how well 6 year-olds are going to do in their final school exams. Using the following variables am I likely under-fitting, fitting well or over-fitting? Postcode, gender, reading level, score in maths test, date of birth, family income.
+
+overfitting
+
+###2 If I have two models, one with an AIC score of 34,902 and the other with an AIC score of 33,559 which model should I use?
+
+You want to use the model with lower AIC score (33,595)
+
+###3 I have two models, the first with: r-squared: 0.44, adjusted r-squared: 0.43. The second with: r-squared: 0.47, adjusted r-squared: 0.41. Which one should I use?
+
+The first one as the second one has lower adj R^2, suggetsings it has been penalised for overfitting
+
+###4 I have a model with the following errors: RMSE error on test set: 10.3, RMSE error on training data: 10.4. Do you think this model is over-fitting?
+
+No, RMSE should be lower on test data but only slightly, which is true in this case
+
+###5 How does k-fold validation work?
+
+It is repeated sampling on test and training data sets, so all the data can be used for training and lessens the effect of rendomness in the samples. You then use the mean of the mse to measure model preformance.
+
+###6 What is a validation set? When do you need one?
+
+Used after training and testing to give a final estimate of model performance.
+
+Use when model contains hyperparameters, and comparing several types of models
+
+###7 Describe how backwards selection works.
+
+backwards selection is a type of automated model building where a model is made with all posiible preictors, then you select out predictors based on how large their effect is on r^2
+
+###8 Describe how best subset selection works.
+
+Build the model based on adding the best combination of predictors possible. 
+

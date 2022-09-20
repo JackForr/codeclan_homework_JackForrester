@@ -1,0 +1,239 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(janitor)
+library(GGally)
+library(modelr)
+library(caret)
+library(leaps)
+library(skimr)
+library(lubridate)
+library(ggfortify)
+```
+
+###cleaning & variable engineering
+```{r}
+avocados <- read_csv("data/avocado.csv") %>% 
+  clean_names()
+skim(avocados)
+```
+PLU's (4046:4225:4770) refer to size (small, large, xl) - factor as one column?
+type refers to being organic or conventional - factor?
+retain month from date/season - extract month then recode for season?
+remove index column & year
+dummies in region??
+```{r}
+unique(avocados$region) #different scopes of region will be problematic i.e total US & West vs LosAngeles (remove)
+
+avocados <- avocados %>% 
+  rename("small" = "x4046",
+         "large" = "x4225",
+         "extra large" = "x4770") %>% 
+  mutate(season = quarter(date)) %>% 
+  mutate(season = case_when(
+    season == 1 ~ 'Winter', #seasonality seems a more logical predictor than specific dates
+    season == 2 ~ 'Spring',
+    season == 3 ~ 'Summer',
+    season == 4 ~ 'Autumn'),
+    type = as.factor(type)) %>% 
+  mutate(season = as.factor(season)) %>% 
+  select(-c(year, date, x1, region)) #leave year in
+```
+```{r}
+alias(lm(average_price ~ .,
+         data = avocados))
+```
+no alias predictors 
+
+
+###splitting test and training set
+```{r}
+n_data <- nrow(avocados)
+test_index <- sample(1:n_data, size = n_data*0.2)
+test_avocados <- slice(avocados, test_index)
+avocados <- slice(avocados, -test_index)
+```
+
+
+###first predictor
+
+I'm choosing to build my model manually to to make it more explainable and ensure 
+that predictors used are supported by theory/logic 
+
+```{r}
+avocados %>% 
+  ggpairs()
+ggsave("avocados.png", width = 15, height = 15)
+```
+no. of small avocados and type seem like options
+```{r}
+model1a <- lm(average_price ~ small,
+              data = avocados)
+
+summary(model1a)
+
+autoplot(model1a)
+```
+
+```{r}
+model1b <- lm(average_price ~ type,
+              data = avocados)
+
+summary(model1b)
+
+autoplot(model1b)
+```
+1b has a superior r^2 and diagnostic plots
+
+check for statistical significance using anova once there's a comparison available
+
+###2nd predictor - based on what explains the residuals from basic model 
+```{r}
+avocados_resid <- avocados %>% 
+  add_residuals(model1b) %>% 
+  select(-c("average_price", "type"))
+
+avocados_resid %>% 
+  ggpairs()
+
+ggsave("residuals1.png", height = 15, width = 15)
+```
+season or small
+```{r}
+model2a <- lm(average_price ~ type + small,
+              data = avocados)
+
+summary(model2a)
+
+autoplot(model2a)
+```
+
+```{r}
+model2b <- lm(average_price ~ type + season,
+              data = avocados)
+
+summary(model2b)
+
+autoplot(model2b)
+```
+2b is the best model 
+
+statistical significance of season can now be checked (type still needs to be)
+```{r}
+anova(model2b, model1b)
+```
+having all levels of season has a statistically significant effect on residuals
+2B still best
+
+```{r}
+model1c <- lm(average_price ~ season,
+              data = avocados) # purely created for comparison
+
+anova(model2b, model1c)
+```
+having all levels of type has a statistically significant effect on residuals
+2B still best
+
+###3rd predictor
+```{r}
+average_price_resid <- avocados %>% 
+  add_residuals(model2b) %>% 
+  select(-c(average_price, type, season))
+
+average_price_resid %>% 
+  ggpairs()
+
+ggsave("residuals2.png", height = 15, width = 15)
+```
+try small and total volume
+
+```{r}
+model3a <- lm(average_price ~  type + season + small,
+              data = avocados)
+
+summary(model3a)
+
+autoplot(model3a)
+```
+
+```{r}
+model3b <- lm(average_price ~  type + season + total_volume,
+              data = avocados)
+
+summary(model3b)
+
+autoplot(model3b)
+```
+model3a is best based on r^2, diagnostic plots still look acceptable. Adj r^2 is also increasing, suggesting I've not reached overfitting
+
+###interactions
+
+```{r}
+average_price_resid <- avocados %>% 
+  add_residuals(model3a) %>% 
+  select(-average_price)
+```
+
+type:total_volume
+```{r}
+coplot(resid ~ total_volume| type,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = average_price_resid, rows = 1)
+```
+organic avocados have lower volume and we're bad at predicting price (near vertical line)
+
+season:total_volume
+```{r}
+coplot(resid ~ total_volume| season,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = average_price_resid, rows = 1)
+```
+not very interesting
+
+type:season
+```{r}
+coplot(resid ~ type| season,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = average_price_resid, rows = 1)
+```
+not interesting
+
+###add type:total_volume interaction
+```{r}
+model4a <- lm(average_price ~  type + season + total_volume + type:total_volume,
+              data = avocados)
+summary(model4a)
+autoplot(model4a)
+```
+
+###apply to test data 
+```{r}
+predictions_test <- test_avocados %>% 
+  add_predictions(model4a) %>% 
+  select(average_price, pred)
+
+mse_test <- mean((predictions_test$pred - test_avocados$average_price)**2)
+```
+###compare to train data 
+```{r}
+predictions_train <- avocados %>% 
+  add_predictions(model4a) %>% 
+  select(average_price, pred)
+
+mse_test <- mean((predictions_train$pred - avocados$average_price)**2)
+```
+ 
+the difference in mean squared is minimal (roughly 0.005), suggests that the model has not been overfitted to the training data and still has predictive power for future unseen data. 
+
