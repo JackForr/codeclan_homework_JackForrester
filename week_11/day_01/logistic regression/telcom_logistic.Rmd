@@ -1,0 +1,130 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(readxl)
+library(tidyverse)
+library(janitor)
+library(pROC)
+library(modelr)
+library(broom)
+```
+```{r}
+telco_churn <- read_excel("data/telecomms_churn.xlsx")
+telco_churn <- clean_names(telco_churn)
+```
+```{r}
+telco_clean <- telco_churn %>%
+  filter(!is.na(total_charges)) %>% 
+  select(-customer_id) %>% 
+  mutate(across(where(is_character), as_factor)) %>%
+  mutate(senior_citizen = as_factor(if_else(senior_citizen == 1, "Yes", "No")))
+```
+senior citizen, partner, tenure, monthly charges, total charges all look promising
+
+###create 3 individual logistic regression models 
+```{r}
+churn_senior_citizen <- glm(churn ~ senior_citizen,
+                            data = telco_clean,
+                            family = binomial(link = "logit"))
+
+summary(churn_senior_citizen)
+```
+```{r}
+churn_partner <- glm(churn ~ partner,
+                            data = telco_clean,
+                            family = binomial(link = "logit"))
+
+summary(churn_partner)
+```
+```{r}
+churn_monthly_charges <- glm(churn ~ monthly_charges,
+                            data = telco_clean,
+                            family = binomial(link = "logit"))
+
+summary(churn_monthly_charges)
+```
+
+###plot ROC curves and detrmine best classifier
+```{r}
+churn_senior_citizen_pred <- telco_clean %>% 
+  add_predictions(churn_senior_citizen, type = "response")
+
+roc_obj_senior_citizen <- churn_senior_citizen_pred %>% 
+  roc(response = churn, predictor = pred)
+```
+```{r}
+churn_partner_pred <- telco_clean %>% 
+  add_predictions(churn_partner, type = "response")
+
+roc_obj_partner <- churn_partner_pred %>% 
+  roc(response = churn, predictor = pred)
+```
+```{r}
+churn_monthly_charges_pred <- telco_clean %>% 
+  add_predictions(churn_monthly_charges, type = "response")
+
+roc_obj_monthly_charges <- churn_monthly_charges_pred %>% 
+  roc(response = churn, predictor = pred)
+```
+
+```{r}
+ggroc(data = list(senior_citizen=roc_obj_senior_citizen,
+                  partner=roc_obj_partner,
+                  monthly_charges=roc_obj_monthly_charges), legacy.axes = TRUE)+
+  labs(x = "False positive rate",
+       y = "True positive rate")
+  
+```
+```{r}
+library(caret)
+train_control <- trainControl(
+  method = "repeatedcv",
+  number = 5,
+  repeats = 100,
+  savePredictions = TRUE,
+  classProbs = TRUE, #retain performnace stats for bianry classifier (AUC etc)
+  summaryFunction = twoClassSummary
+  )
+
+val_senior_citizen <- train(
+  churn ~ senior_citizen,
+  family = binomial(link = "logit"),
+  method = "glm",
+  data = telco_clean,
+  trControl = train_control
+)
+
+val_model_monthly_charges <- train(
+  churn ~ monthly_charges,
+  family = binomial(link = "logit"),
+  method = "glm",
+  data = telco_clean,
+  trControl = train_control
+)
+
+val_model_partner <- train(
+  churn ~ partner,
+  family = binomial(link = "logit"),
+  method = "glm",
+  data = telco_clean,
+  trControl = train_control
+)
+```
+monthly charges is likely the best classifier as highest ROC (0.62)
+
+###interpreting monthly charges model
+```{r}
+telco_clean <- telco_clean %>% 
+  mutate(churn = if_else(churn == "No", 0, 1))
+
+ggplot(telco_clean) +
+  geom_jitter(aes(x = monthly_charges, y = as.integer(churn)), shape = 1, 
+              position = position_jitter(h = 0.03)) + 
+   geom_line(data = churn_monthly_charges_pred, aes(x = monthly_charges , y = pred), col = 'red') + 
+  ylab("Probability")
+```
+
+
+
