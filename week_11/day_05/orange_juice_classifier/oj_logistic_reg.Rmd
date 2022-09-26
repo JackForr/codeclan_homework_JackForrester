@@ -1,0 +1,195 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+```
+
+```{r}
+oj <- read_csv("data/orange_juice.csv") %>% 
+  janitor::clean_names()
+```
+###cleaning
+```{r}
+unique(oj$special_ch)
+unique(oj$store)
+unique(oj$store_id)
+
+skimr::skim(oj)
+
+oj_clean <- oj %>% 
+  mutate(purchase_mm = recode(purchase, "CH" = 0, "MM" = 1),
+         purchase_mm = as.factor(purchase_mm),
+         store7 = recode(store7, "No" = FALSE, "Yes" = TRUE),
+         special_ch = as.factor(special_ch),
+         special_mm = as.factor(special_mm),
+         store = as.factor(store),
+         store_id = as.factor(store_id)) %>% 
+  select(-c(purchase, weekof_purchase))
+```
+
+```{r}
+alias(purchase_mm ~., data = oj_clean)
+
+oj_clean <- oj_clean %>% 
+  select(-c(store7, list_price_diff, price_diff, disc_ch, disc_mm, store))
+```
+
+```{r}
+alias(purchase_mm ~ ., data = oj_clean)
+```
+
+###model creation
+
+```{r}
+library(GGally)
+```
+```{r}
+ggpairs(oj_clean)
+
+ggsave("oj_pairs.png", height = 20, width = 20)
+```
+loyal_ch, price_ch, price_mm, pct_disc_mm, pct_disc_ch
+
+```{r}
+library(broom)
+oj_1a <- glm(purchase_mm ~ loyal_ch ,
+             data = oj_clean,
+             family = binomial(link = "logit"))
+
+tidy(oj_1a)
+```
+```{r}
+oj_1b <- glm(purchase_mm ~ price_ch ,
+             data = oj_clean,
+             family = binomial(link = "logit"))
+
+tidy(oj_1b)
+```
+
+```{r}
+oj_1c <- glm(purchase_mm ~ price_mm ,
+             data = oj_clean,
+             family = binomial(link = "logit"))
+
+tidy(oj_1c)
+```
+```{r}
+oj_1d <- glm(purchase_mm ~ pct_disc_mm ,
+             data = oj_clean,
+             family = binomial(link = "logit"))
+
+tidy(oj_1d)
+```
+
+```{r}
+oj_1e <- glm(purchase_mm ~ pct_disc_ch ,
+             data = oj_clean,
+             family = binomial(link = "logit"))
+
+tidy(oj_1e)
+```
+loyalty, price_mm, pct_disc_mm & pct_disc_ch seem like significant predictors
+
+```{r}
+oj_multiple1 <- glm(purchase_mm ~ loyal_ch + price_mm,
+             data = oj_clean,
+             family = binomial(link = "logit"))
+
+tidy(oj_multiple1)
+```
+
+```{r}
+oj_multiple2 <- glm(purchase_mm ~ loyal_ch + pct_disc_mm,
+             data = oj_clean,
+             family = binomial(link = "logit"))
+
+tidy(oj_multiple2)
+```
+
+```{r}
+oj_multiple3 <- glm(purchase_mm ~ loyal_ch + pct_disc_ch,
+             data = oj_clean,
+             family = binomial(link = "logit"))
+
+tidy(oj_multiple3)
+```
+
+###test model performances
+
+```{r}
+library(pROC)
+library(modelr)
+```
+
+```{r}
+oj_multiple1_pred <- oj_clean %>% 
+  add_predictions(oj_multiple1, type = "response")
+
+oj_multiple2_pred <- oj_clean %>% 
+  add_predictions(oj_multiple2, type = "response")
+
+oj_multiple3_pred <- oj_clean %>% 
+  add_predictions(oj_multiple3, type = "response")
+```
+```{r}
+roc_obj1 <- oj_multiple1_pred %>% 
+  roc(response = purchase_mm, 
+      predictor = pred)
+
+roc_obj2 <- oj_multiple2_pred %>% 
+  roc(response = purchase_mm, 
+      predictor = pred)
+
+roc_obj3 <- oj_multiple3_pred %>% 
+  roc(response = purchase_mm, 
+      predictor = pred)
+```
+
+```{r}
+ggroc(
+  data = list(
+    mod1 = roc_obj1, 
+    mod2 = roc_obj2,
+    mod3 = roc_obj3
+  ), 
+  legacy.axes = TRUE) +
+  coord_fixed()
+```
+model two (loyalty & mm discount) looks to be the best predictor 
+
+```{r}
+auc(roc_obj1)
+auc(roc_obj2)
+auc(roc_obj3)
+```
+auc scores confirm this 
+
+###cross validate best performing model
+
+```{r}
+library(caret)
+```
+
+```{r}
+levels(oj_clean$purchase_mm) <- c("first_class", "second_class")
+
+train_control <- trainControl(method = "repeatedcv", 
+                              number = 5,
+                              repeats = 100,
+                              savePredictions = TRUE, 
+                              classProbs = TRUE, 
+                              summaryFunction = twoClassSummary)
+```
+
+```{r}
+mod2_cv <- train(oj_multiple2$formula,
+                                       data = oj_clean,
+                                       trControl = train_control,
+                                       method = "glm",
+                                       family = binomial(link = 'logit'))
+
+mod2_cv$results
+```
+ROC from cross validation is very similar to from training dataset. This suggests that the model built is not overfitted and holds preditcive power for unseen data.
